@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/time_meditation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="@android:color/black"
+        android:textSize="88sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="09:00" />
+
+    <ImageButton
+        android:id="@+id/minutesUp"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/up_arrow"
+        android:scaleType="center"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_up" />
+
+    <ImageButton
+        android:id="@+id/secondsUp"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/up_arrow"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_up" />
+
+    <ImageButton
+        android:id="@+id/secondsDown"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginRight="60dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/down_arrow"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down" />
+
+    <ImageButton
+        android:id="@+id/minutesDown"
+        android:layout_width="90dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="160dp"
+        android:background="@drawable/button_background"
+        android:contentDescription="@string/down_arrow"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down" />
+
+    <ImageButton
+        android:id="@+id/timerStart"
+        android:layout_width="45dp"
+        android:layout_height="109dp"
+        android:layout_marginTop="42dp"
+        android:background="@drawable/button_background_inverse"
+        android:contentDescription="@string/timer_start"
+        android:onClick="startTimer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_forward_white_48dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
