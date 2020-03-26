@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Bo Tree</string>
+    <string name="title_meditation">Meditation</string>
+    <string name="title_reflections">Reflections</string>
+    <string name="title_settings">Settings</string>
+    <string name="up_arrow">Up Arrow</string>
+    <string name="down_arrow">Down Arrow</string>
+    <string name="timer_start">Start the timer</string>
+</resources>
