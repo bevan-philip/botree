@@ -21,8 +21,6 @@ const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
 class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
 
-    private var startTimeInMillis:Long = 600000
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

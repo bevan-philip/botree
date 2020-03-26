@@ -6,4 +6,5 @@
     <string name="up_arrow">Up Arrow</string>
     <string name="down_arrow">Down Arrow</string>
     <string name="timer_start">Start the timer</string>
+    <string name="timer_stop">Stop the timer</string>
 </resources>
