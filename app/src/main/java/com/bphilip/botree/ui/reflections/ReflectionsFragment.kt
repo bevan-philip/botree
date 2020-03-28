@@ -1,4 +1,4 @@
-package com.bphilip.botree.ui.notifications
+package com.bphilip.botree.ui.reflections
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bphilip.botree.R
 
-class NotificationsFragment : Fragment() {
+class ReflectionsFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var reflectionsViewModel: ReflectionsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-            ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_settings, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        notificationsViewModel.text.observe(this, Observer {
+        reflectionsViewModel =
+            ViewModelProviders.of(this).get(ReflectionsViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_reflections, container, false)
+        val textView: TextView = root.findViewById(R.id.text_dashboard)
+        reflectionsViewModel.text.observe(this, Observer {
             textView.text = it
         })
         return root

@@ -1,13 +1,13 @@
-package com.bphilip.botree.ui.notifications
+package com.bphilip.botree.ui.reflections
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class ReflectionsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is dashboard Fragment"
     }
     val text: LiveData<String> = _text
 }
