@@ -1,15 +1,13 @@
 package com.bphilip.botree
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -20,6 +18,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
 class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
+
+    private lateinit var sharedPref : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +37,30 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        sharedPref = this.getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
+
     }
 
-    fun startTimer(view: View, duration : Long) {
+    /**
+     * startTimer
+     * Starts the Timer activity, with the duration specified in MeditationFragment.
+     */
+    fun startTimer(view: View, duration : Int) {
         val intent = Intent(this, Timer::class.java).apply {
-            putExtra(EXTRA_TIMER, duration)
+            putExtra(EXTRA_TIMER, duration.toLong())
         }
 
         startActivity(intent)
     }
 
-    override fun onTimerStart(timer : Long, v : View) {
+    override fun onTimerStart(timer : Int, v : View) {
+        with (sharedPref.edit()) {
+            putInt(getString(R.string.saved_meditation_timer_key), timer)
+            apply()
+        }
+
         startTimer(v, timer)
     }
 

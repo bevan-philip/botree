@@ -1,8 +1,10 @@
 package com.bphilip.botree
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -31,34 +33,21 @@ class Timer : AppCompatActivity() {
         mTimeLeftInMillis = startTimeInMillis
 
         val textView = findViewById<TextView>(R.id.countdown_timer).apply {
-            text = timeFormatter(startTimeInMillis)
+            text = Utility.timeFormatter(startTimeInMillis)
         }
 
         mProgressCountDown = findViewById(R.id.progress_countdown)
         mPauseButton = findViewById(R.id.pauseButton)
         mPauseButton.setOnClickListener {
-            if (mCountDownStarted) {
-                pauseTimer()
-            }
-            else {
-                startTimer()
-            }
+            if (mCountDownStarted) pauseTimer() else startTimer()
         }
 
         mProgressCountDown.progress = 100
 
         startTimer()
 
-
     }
 
-    private fun timeFormatter (timeInMillis : Long) : String {
-        return String.format("%02d:%02d",
-            TimeUnit.MILLISECONDS.toMinutes(timeInMillis),
-            TimeUnit.MILLISECONDS.toSeconds(timeInMillis) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillis))
-        )
-    }
 
     fun startTimer() {
         mTextViewTimer = findViewById(R.id.countdown_timer)
@@ -66,7 +55,7 @@ class Timer : AppCompatActivity() {
 
         mCountDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                mTextViewTimer.text = timeFormatter(millisUntilFinished)
+                mTextViewTimer.text = Utility.timeFormatter(millisUntilFinished)
                 Log.v("CountDown", millisUntilFinished.toString())
                 Log.v("Progress", ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).toString())
                 mProgressCountDown.progress =
@@ -75,7 +64,8 @@ class Timer : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                mTextViewTimer.text = "Done!"
+                mProgressCountDown.progress = 0
+                finishMeditation(findViewById(R.id.progress_countdown), startTimeInMillis)
             }
         }.start()
 
@@ -100,5 +90,14 @@ class Timer : AppCompatActivity() {
         super.onDestroy()
 
         destroyTimer()
+    }
+
+    fun finishMeditation(view: View, duration : Long) {
+        val intent = Intent(this, PostMeditation::class.java).apply {
+            putExtra(EXTRA_TIMER, duration)
+        }
+
+        startActivity(intent)
+        finish()
     }
 }
