@@ -11,7 +11,8 @@
         android:minHeight="@dimen/min_height"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_word"
-        android:inputType="textAutoComplete"
+        android:inputType="textMultiLine"
+        android:autoText="true"
         android:layout_margin="@dimen/big_padding"
         android:textSize="18sp" />
 

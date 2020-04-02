@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bphilip.botree.ui.meditation.MeditationFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidThreeTen.init(this)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
