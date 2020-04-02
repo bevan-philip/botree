@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import org.threeten.bp.format.DateTimeFormatter
 
 class WordListAdapter internal constructor(
     context: Context
@@ -16,6 +17,7 @@ class WordListAdapter internal constructor(
 
     inner class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val wordItemView: TextView = itemView.findViewById(R.id.textView)
+        val dateItemView: TextView = itemView.findViewById(R.id.date)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
@@ -26,6 +28,9 @@ class WordListAdapter internal constructor(
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         val current = words[position]
         holder.wordItemView.text = current.word
+        holder.dateItemView.text = String.format("%s | %s",
+            current.date?.format(DateTimeFormatter.ISO_DATE),
+            current.date?.format(DateTimeFormatter.ofPattern("H:m")))
     }
 
     internal fun setWords(words: List<Word>) {

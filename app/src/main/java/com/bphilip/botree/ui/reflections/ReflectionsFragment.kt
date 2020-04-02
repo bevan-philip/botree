@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.threeten.bp.LocalDateTime
 
 class ReflectionsFragment : Fragment() {
 
@@ -62,7 +63,7 @@ class ReflectionsFragment : Fragment() {
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let {
-                val word = Word(it)
+                val word = Word(0, it, LocalDateTime.now())
                 wordViewModel.insert(word)
             }
         } else {

@@ -1,15 +1,17 @@
 package com.bphilip.botree
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
 @Database(entities = arrayOf(Word::class), version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 public abstract class WordRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao
@@ -32,9 +34,9 @@ public abstract class WordRoomDatabase : RoomDatabase() {
             wordDao.deleteAll()
 
             // Add sample words.
-            var word = Word("Hello")
+            var word = Word(0,"Hello", LocalDateTime.now())
             wordDao.insert(word)
-            word = Word("World!")
+            word = Word(0,"World!", LocalDateTime.now())
             wordDao.insert(word)
 
             // TODO: Add your own words!
@@ -66,5 +68,21 @@ public abstract class WordRoomDatabase : RoomDatabase() {
                 return instance
             }
         }
+    }
+}
+
+class Converters {
+    @TypeConverter
+    fun fromTimestamp(value: Long?): LocalDateTime? {
+        return value?.let {
+            LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(it), ZoneId.systemDefault()
+            )
+        }
+    }
+
+    @TypeConverter
+    fun LocalDateTimeToTimestamp(date: LocalDateTime?): Long? {
+        return date?.atZone(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
     }
 }
