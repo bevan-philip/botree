@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.*
+import com.bphilip.botree.ui.meditation.MeditationViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.threeten.bp.LocalDateTime
 
@@ -56,6 +58,18 @@ class ReflectionsFragment : Fragment() {
             val intent = Intent(mContext, NewWordActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
+
+        wordViewModel.changeDates(LocalDateTime.now().minusDays(7), LocalDateTime.now())
+
+        reflectionsViewModel =
+            ViewModelProviders.of(activity as FragmentActivity).get(ReflectionsViewModel::class.java)
+        val textView: TextView = view.findViewById(R.id.textDate)
+
+        reflectionsViewModel.text.observe(this, Observer {
+            textView.text = it
+        })
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

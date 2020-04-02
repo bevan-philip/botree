@@ -30,7 +30,7 @@ class WordListAdapter internal constructor(
         holder.wordItemView.text = current.word
         holder.dateItemView.text = String.format("%s | %s",
             current.date?.format(DateTimeFormatter.ISO_DATE),
-            current.date?.format(DateTimeFormatter.ofPattern("H:m")))
+            current.date?.format(DateTimeFormatter.ofPattern("HH:mm")))
     }
 
     internal fun setWords(words: List<Word>) {

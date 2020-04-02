@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDateTime
 
 // Class extends AndroidViewModel and requires application as a parameter.
 class WordViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,4 +33,9 @@ class WordViewModel(application: Application) : AndroidViewModel(application) {
     fun insert(word: Word) = viewModelScope.launch {
         repository.insert(word)
     }
+
+    fun changeDates(start : LocalDateTime, end : LocalDateTime) {
+        repository.changeTime(start, end)
+    }
+
 }
