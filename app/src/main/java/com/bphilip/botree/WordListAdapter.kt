@@ -13,7 +13,7 @@ class WordListAdapter internal constructor(
 ) : RecyclerView.Adapter<WordListAdapter.WordViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var words = emptyList<Word>() // Cached copy of words
+    private var words = emptyList<Reflection>() // Cached copy of words
 
     inner class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val wordItemView: TextView = itemView.findViewById(R.id.textView)
@@ -33,8 +33,8 @@ class WordListAdapter internal constructor(
             current.date?.format(DateTimeFormatter.ofPattern("HH:mm")))
     }
 
-    internal fun setWords(words: List<Word>) {
-        this.words = words
+    internal fun setWords(reflections: List<Reflection>) {
+        this.words = reflections
         notifyDataSetChanged()
     }
 

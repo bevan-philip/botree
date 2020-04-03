@@ -5,12 +5,13 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
-@Database(entities = arrayOf(Word::class), version = 1, exportSchema = false)
+@Database(entities = [Reflection::class, Meditation::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 public abstract class WordRoomDatabase : RoomDatabase() {
 
@@ -31,13 +32,13 @@ public abstract class WordRoomDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(wordDao: WordDao) {
             // Delete all content here.
-            wordDao.deleteAll()
+            wordDao.deleteAllReflections()
 
             // Add sample words.
-            var word = Word(0,"Hello", LocalDateTime.now())
-            wordDao.insert(word)
-            word = Word(0,"World!", LocalDateTime.now())
-            wordDao.insert(word)
+            var word = Reflection(0,"Hello", LocalDateTime.now())
+            wordDao.insertReflection(word)
+            word = Reflection(0,"World!", LocalDateTime.now())
+            wordDao.insertReflection(word)
 
             // TODO: Add your own words!
         }
@@ -84,5 +85,15 @@ class Converters {
     @TypeConverter
     fun LocalDateTimeToTimestamp(date: LocalDateTime?): Long? {
         return date?.atZone(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
+    }
+
+    @TypeConverter
+    fun DurationToTimeStamp(duration : Duration?) : Long? {
+        return duration?.toMillis()
+    }
+
+    @TypeConverter
+    fun TimeStampToDuration(value : Long) : Duration? {
+        return Duration.ofMillis(value)
     }
 }

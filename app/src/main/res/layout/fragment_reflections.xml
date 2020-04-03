@@ -31,10 +31,26 @@
         android:id="@+id/textDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2020-04-02" />
+
+    <ImageButton
+        android:id="@+id/button_weeksminusone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/button_weeksplusone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
