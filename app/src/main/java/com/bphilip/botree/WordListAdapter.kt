@@ -13,10 +13,10 @@ class WordListAdapter internal constructor(
 ) : RecyclerView.Adapter<WordListAdapter.WordViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var words = emptyList<Reflection>() // Cached copy of words
+    private var reflections = emptyList<Reflection>() // Cached copy of words
 
     inner class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val wordItemView: TextView = itemView.findViewById(R.id.textView)
+        val titleItemView: TextView = itemView.findViewById(R.id.textView)
         val dateItemView: TextView = itemView.findViewById(R.id.date)
     }
 
@@ -26,17 +26,17 @@ class WordListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
-        val current = words[position]
-        holder.wordItemView.text = current.word
+        val current = reflections[position]
+        holder.titleItemView.text = current.word
         holder.dateItemView.text = String.format("%s | %s",
             current.date?.format(DateTimeFormatter.ISO_DATE),
             current.date?.format(DateTimeFormatter.ofPattern("HH:mm")))
     }
 
     internal fun setWords(reflections: List<Reflection>) {
-        this.words = reflections
+        this.reflections = reflections
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = words.size
+    override fun getItemCount() = reflections.size
 }

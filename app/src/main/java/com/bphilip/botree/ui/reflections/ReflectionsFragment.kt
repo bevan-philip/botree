@@ -57,7 +57,7 @@ class ReflectionsFragment : Fragment() {
             val intent = Intent(mContext, NewWordActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
-        
+
         val textView: TextView = view.findViewById(R.id.textDate)
 
         reflectionsViewModel.text.observe(this, Observer {
@@ -69,8 +69,6 @@ class ReflectionsFragment : Fragment() {
 
         val weeksPlusOne = view.findViewById<ImageButton>(R.id.button_weeksplusone)
         weeksPlusOne.setOnClickListener { changeTime(-1) }
-
-        changeTime(0)
 
     }
 
