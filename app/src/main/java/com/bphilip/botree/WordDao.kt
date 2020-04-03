@@ -13,6 +13,9 @@ interface WordDao {
     @Query("SELECT * from reflections_table WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getSortedReflections(start : Long, end : Long): LiveData<List<Reflection>>
 
+    @Query("SELECT * from meditations_table WHERE date BETWEEN :start AND :end ORDER BY date DESC")
+    fun getSortedMeditations(start : Long, end : Long): LiveData<List<Meditation>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertReflection(reflection: Reflection)
 

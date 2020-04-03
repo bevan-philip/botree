@@ -1,9 +1,11 @@
 package com.bphilip.botree
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 
-class PostMeditationViewModel : ViewModel() {
+class PostMeditationViewModel : ViewModel()  {
+
     private val _text = MutableLiveData<String>().apply {
         value = "Well done, you have meditated for X minutes!"
     }
@@ -12,4 +14,5 @@ class PostMeditationViewModel : ViewModel() {
     var meditatedFor : Long = 600000
 
     var pullValue = true
+
 }

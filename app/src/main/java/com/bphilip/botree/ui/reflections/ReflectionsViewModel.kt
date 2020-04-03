@@ -3,7 +3,8 @@ package com.bphilip.botree.ui.reflections
 import android.app.Application
 import androidx.lifecycle.*
 import com.bphilip.botree.Reflection
-import com.bphilip.botree.WordRepository
+import com.bphilip.botree.DataRepository
+import com.bphilip.botree.Meditation
 import com.bphilip.botree.WordRoomDatabase
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
@@ -15,7 +16,7 @@ import java.util.*
 class ReflectionsViewModel (application: Application) : AndroidViewModel(application) {
 
     // The ViewModel maintains a reference to the repository to get data.
-    private val repository: WordRepository
+    private val repository: DataRepository
     // LiveData gives us updated words when they change.
     val allReflections: LiveData<List<Reflection>>
     var weeksBehind : Long  = 0
@@ -24,8 +25,9 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository.
         val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
-        repository = WordRepository(wordsDao)
+        repository = DataRepository(wordsDao)
         allReflections = repository.allReflections
+        changeDates(LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1), LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6))
     }
 
     /**
