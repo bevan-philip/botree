@@ -1,23 +1,20 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.timer
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.bphilip.botree.*
 import com.bphilip.botree.ui.meditation.MeditationViewModel
+import com.bphilip.botree.ui.post_meditation.PostMeditation
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
-import java.lang.Math.round
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 class Timer : AppCompatActivity() {
@@ -31,6 +28,7 @@ class Timer : AppCompatActivity() {
 
     private lateinit var mCountDownTimer: CountDownTimer
     private lateinit var mPauseButton : ImageButton
+    private lateinit var mStopButton : ImageButton
 
     private lateinit var meditationViewModel : MeditationViewModel
 
@@ -43,14 +41,16 @@ class Timer : AppCompatActivity() {
         mTimeLeftInMillis = startTimeInMillis
 
         val textView = findViewById<TextView>(R.id.countdown_timer).apply {
-            text = Utility.timeFormatter(startTimeInMillis)
+            text = Utility.timeFormatter(startTimeInMillis, context)
         }
 
         mProgressCountDown = findViewById(R.id.progress_countdown)
-        mPauseButton = findViewById(R.id.pauseButton)
+        mPauseButton = findViewById(R.id.pause_button)
         mPauseButton.setOnClickListener {
             if (mCountDownStarted) pauseTimer() else startTimer()
         }
+
+        mStopButton = findViewById(R.id.stop_button)
 
         mProgressCountDown.progress = 100
 
@@ -66,7 +66,8 @@ class Timer : AppCompatActivity() {
 
         mCountDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                mTextViewTimer.text = Utility.timeFormatter(millisUntilFinished)
+                mTextViewTimer.text =
+                    Utility.timeFormatter(millisUntilFinished, applicationContext)
                 Log.v("CountDown", millisUntilFinished.toString())
                 Log.v("Progress", ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).toString())
                 mProgressCountDown.progress =
@@ -108,7 +109,13 @@ class Timer : AppCompatActivity() {
             putExtra(EXTRA_TIMER, duration)
         }
 
-        meditationViewModel.insert(Meditation(0, Duration.ofMillis(duration), LocalDateTime.now()))
+        meditationViewModel.insert(
+            Meditation(
+                0,
+                Duration.ofMillis(duration),
+                LocalDateTime.now()
+            )
+        )
 
         startActivity(intent)
         finish()

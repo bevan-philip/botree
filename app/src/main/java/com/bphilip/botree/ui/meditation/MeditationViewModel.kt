@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import com.bphilip.botree.DataRepository
 import com.bphilip.botree.Meditation
 import com.bphilip.botree.Utility
-import com.bphilip.botree.WordRoomDatabase
+import com.bphilip.botree.ReflectionRoomDatabase
 import kotlinx.coroutines.launch
 
 class MeditationViewModel (application: Application) : AndroidViewModel(application)  {
@@ -19,13 +19,13 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
+        val wordsDao = ReflectionRoomDatabase.getDatabase(application, viewModelScope).reflectionDao()
         repository = DataRepository(wordsDao)
         allMeditations = repository.allMeditations
     }
 
     private val _text = MutableLiveData<String>().apply {
-        value = Utility.timeFormatter(startTimeInMillis.toLong())
+        value = Utility.timeFormatter(startTimeInMillis.toLong(), application.applicationContext)
     }
     val text: MutableLiveData<String> = _text
 

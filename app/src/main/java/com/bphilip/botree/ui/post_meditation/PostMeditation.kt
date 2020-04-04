@@ -1,21 +1,15 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.post_meditation
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bphilip.botree.NewWordActivity.Companion.EXTRA_REPLY
-import com.bphilip.botree.ui.meditation.MeditationViewModel
+import com.bphilip.botree.*
+import com.bphilip.botree.ui.reflections.NewWordActivity
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
-import org.threeten.bp.Duration
-import org.threeten.bp.LocalDateTime
 
 class PostMeditation : AppCompatActivity() {
 
@@ -43,7 +37,8 @@ class PostMeditation : AppCompatActivity() {
             postMeditationViewModel.pullValue = false
         }
 
-        postMeditationViewModel.text.value = Utility.timeFormatter(postMeditationViewModel.meditatedFor)
+        postMeditationViewModel.text.value =
+            Utility.timeFormatter(postMeditationViewModel.meditatedFor, applicationContext)
 
         var endSessionButton : Button = findViewById(R.id.button_end_session)
         endSessionButton.setOnClickListener { onSupportNavigateUp() }
@@ -64,7 +59,13 @@ class PostMeditation : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Utility.createReflectionFromIntent(requestCode, resultCode, data, applicationContext, reflectionsViewModel)
+        Utility.createReflectionFromIntent(
+            requestCode,
+            resultCode,
+            data,
+            applicationContext,
+            reflectionsViewModel
+        )
     }
 
 }

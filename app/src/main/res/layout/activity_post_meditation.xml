@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bphilip.botree.PostMeditation">
+    tools:context="com.bphilip.botree.ui.post_meditation.PostMeditation">
 
     <TextView
         android:id="@+id/post_meditation_text"

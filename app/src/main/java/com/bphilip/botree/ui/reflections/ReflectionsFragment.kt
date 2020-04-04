@@ -1,6 +1,5 @@
 package com.bphilip.botree.ui.reflections
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +38,8 @@ class ReflectionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = WordListAdapter(activity as Context)
+        val adapter =
+            ReflectionListAdapter(activity as Context)
         adapter.notifyDataSetChanged()
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(mContext as Context)

@@ -1,4 +1,4 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.reflections
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bphilip.botree.R
+import com.bphilip.botree.Reflection
 import org.threeten.bp.format.DateTimeFormatter
 
-class WordListAdapter internal constructor(
+class ReflectionListAdapter internal constructor(
     context: Context
-) : RecyclerView.Adapter<WordListAdapter.WordViewHolder>() {
+) : RecyclerView.Adapter<ReflectionListAdapter.WordViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var reflections = emptyList<Reflection>() // Cached copy of words

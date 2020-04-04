@@ -65,7 +65,7 @@ class MeditationFragment : Fragment() {
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
         if (meditationViewModel.loadStartTime) {
-            meditationViewModel.startTimeInMillis = sharedPref?.getInt(
+            meditationViewModel.startTimeInMillis = sharedPref.getInt(
                 getString(R.string.saved_meditation_timer_key),
                 resources.getInteger(R.integer.default_meditation_timer)
             )
@@ -116,7 +116,7 @@ class MeditationFragment : Fragment() {
             mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88f)
         }
 
-        meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong())
+        meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), mContext as Context)
 
     }
 
