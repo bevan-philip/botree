@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bphilip.botree.PostMeditation">
+    tools:context="com.bphilip.botree.ui.post_meditation.PostMeditation">
 
     <TextView
         android:id="@+id/post_meditation_text"
@@ -20,7 +20,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/post_meditation_message"
-        android:textSize="56sp"
+        android:textSize="40sp"
         android:textStyle="bold"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,4 +38,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/post_meditation_text"
         tools:text="09:00" />
+
+    <Button
+        android:id="@+id/button_end_session"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/button_background_inverse"
+        android:text="@string/end_session"
+        android:textColor="@color/buttonLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_add_reflection" />
+
+    <Button
+        android:id="@+id/button_add_reflection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/button_background_inverse"
+        android:text="@string/add_reflection"
+        android:textColor="@color/buttonLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_meditated_for" />
 </androidx.constraintlayout.widget.ConstraintLayout>

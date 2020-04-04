@@ -1,4 +1,4 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.timer
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,12 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.lang.Math.round
-import java.util.concurrent.TimeUnit
+import androidx.lifecycle.ViewModelProviders
+import com.bphilip.botree.*
+import com.bphilip.botree.ui.meditation.MeditationViewModel
+import com.bphilip.botree.ui.post_meditation.PostMeditation
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 import kotlin.math.roundToInt
 
 class Timer : AppCompatActivity() {
@@ -24,6 +28,10 @@ class Timer : AppCompatActivity() {
 
     private lateinit var mCountDownTimer: CountDownTimer
     private lateinit var mPauseButton : ImageButton
+    private lateinit var mStopButton : ImageButton
+
+    private lateinit var meditationViewModel : MeditationViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,21 +41,24 @@ class Timer : AppCompatActivity() {
         mTimeLeftInMillis = startTimeInMillis
 
         val textView = findViewById<TextView>(R.id.countdown_timer).apply {
-            text = Utility.timeFormatter(startTimeInMillis)
+            text = Utility.timeFormatter(startTimeInMillis, context)
         }
 
         mProgressCountDown = findViewById(R.id.progress_countdown)
-        mPauseButton = findViewById(R.id.pauseButton)
+        mPauseButton = findViewById(R.id.pause_button)
         mPauseButton.setOnClickListener {
             if (mCountDownStarted) pauseTimer() else startTimer()
         }
 
+        mStopButton = findViewById(R.id.stop_button)
+
         mProgressCountDown.progress = 100
 
+        meditationViewModel =
+            ViewModelProviders.of(this).get(MeditationViewModel::class.java)
         startTimer()
 
     }
-
 
     fun startTimer() {
         mTextViewTimer = findViewById(R.id.countdown_timer)
@@ -55,7 +66,8 @@ class Timer : AppCompatActivity() {
 
         mCountDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                mTextViewTimer.text = Utility.timeFormatter(millisUntilFinished)
+                mTextViewTimer.text =
+                    Utility.timeFormatter(millisUntilFinished, applicationContext)
                 Log.v("CountDown", millisUntilFinished.toString())
                 Log.v("Progress", ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).toString())
                 mProgressCountDown.progress =
@@ -96,6 +108,14 @@ class Timer : AppCompatActivity() {
         val intent = Intent(this, PostMeditation::class.java).apply {
             putExtra(EXTRA_TIMER, duration)
         }
+
+        meditationViewModel.insert(
+            Meditation(
+                0,
+                Duration.ofMillis(duration),
+                LocalDateTime.now()
+            )
+        )
 
         startActivity(intent)
         finish()
