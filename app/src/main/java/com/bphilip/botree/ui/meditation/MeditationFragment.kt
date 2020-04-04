@@ -37,7 +37,6 @@ class MeditationFragment : Fragment() {
 
 
     private val newWordActivityRequestCode = 1
-    private var mContext: Context? = null
 
     lateinit var dataPasser: OnTimerStart
 
@@ -116,19 +115,8 @@ class MeditationFragment : Fragment() {
             mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88f)
         }
 
-        meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), mContext as Context)
+        meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), activity as Context)
 
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-        dataPasser = context as OnTimerStart
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mContext = null
     }
 
     interface OnTimerStart {

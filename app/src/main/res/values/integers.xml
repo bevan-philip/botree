@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="transitionDuration">300</integer>
-    <integer name="default_meditation_timer">60000</integer>
+    <integer name="default_meditation_timer">600000</integer>
     <integer name="max_default_font_size">6000000</integer>
     <integer name="newWordActivityRequestCode">1</integer>
 </resources>
