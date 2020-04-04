@@ -40,7 +40,7 @@ class Timer : AppCompatActivity() {
         startTimeInMillis = intent.getLongExtra(EXTRA_TIMER, 600000)
         mTimeLeftInMillis = startTimeInMillis
 
-        val textView = findViewById<TextView>(R.id.countdown_timer).apply {
+        findViewById<TextView>(R.id.countdown_timer).apply {
             text = Utility.timeFormatter(startTimeInMillis, context)
         }
 
@@ -51,6 +51,7 @@ class Timer : AppCompatActivity() {
         }
 
         mStopButton = findViewById(R.id.stop_button)
+        mStopButton.setOnClickListener { v -> finishMeditation(v, startTimeInMillis - mTimeLeftInMillis) }
 
         mProgressCountDown.progress = 100
 
@@ -67,7 +68,7 @@ class Timer : AppCompatActivity() {
         mCountDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 mTextViewTimer.text =
-                    Utility.timeFormatter(millisUntilFinished, applicationContext)
+                    Utility.timeFormatter(millisUntilFinished + 1000, applicationContext)
                 Log.v("CountDown", millisUntilFinished.toString())
                 Log.v("Progress", ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).toString())
                 mProgressCountDown.progress =
@@ -76,6 +77,7 @@ class Timer : AppCompatActivity() {
             }
 
             override fun onFinish() {
+                mTextViewTimer.text = "00:00"
                 mProgressCountDown.progress = 0
                 finishMeditation(findViewById(R.id.progress_countdown), startTimeInMillis)
             }
@@ -90,6 +92,7 @@ class Timer : AppCompatActivity() {
         mCountDownStarted = false
         mPauseButton.setImageResource(R.drawable.ic_play_arrow)
     }
+
 
 
     private fun destroyTimer() {
