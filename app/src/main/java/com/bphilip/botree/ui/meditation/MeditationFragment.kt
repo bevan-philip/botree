@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -75,12 +76,22 @@ class MeditationFragment : Fragment() {
         mButtonSecondsDown = getView()?.findViewById(R.id.secondsDown) as ImageButton
 
         // Starts the timer.
-        mButtonStart.setOnClickListener { v-> startTimer(v, meditationViewModel.startTimeInMillis) }
-        // Allows changing the timer
-        mButtonMinutesUp.setOnClickListener { meditationViewModel.startTimeInMillis += 60000; timeUpdater() }
-        mButtonMinutesDown.setOnClickListener { meditationViewModel.startTimeInMillis -= 60000; timeUpdater()  }
-        mButtonSecondsUp.setOnClickListener { meditationViewModel.startTimeInMillis += 5000; timeUpdater()  }
-        mButtonSecondsDown.setOnClickListener { meditationViewModel.startTimeInMillis -= 5000; timeUpdater()  }
+        mButtonStart.setOnClickListener {
+            with (sharedPref.edit()) {
+                putInt(getString(R.string.saved_meditation_timer_key), meditationViewModel.startTimeInMillis)
+                apply()
+            }
+            val intent = Intent(activity, Timer::class.java).apply {
+                putExtra(EXTRA_TIMER, meditationViewModel.startTimeInMillis.toLong())
+            }
+            Log.i("mVM.startTimeInMillis", meditationViewModel.startTimeInMillis.toString())
+            startActivity(intent)
+        }
+        // Changes the timer on button press.
+        mButtonMinutesUp.setOnClickListener { meditationViewModel.startTimeInMillis += resources.getInteger(R.integer.minutes_increment); timeUpdater() }
+        mButtonMinutesDown.setOnClickListener { meditationViewModel.startTimeInMillis -= resources.getInteger(R.integer.minutes_increment); timeUpdater()  }
+        mButtonSecondsUp.setOnClickListener { meditationViewModel.startTimeInMillis += resources.getInteger(R.integer.seconds_increment); timeUpdater()  }
+        mButtonSecondsDown.setOnClickListener { meditationViewModel.startTimeInMillis -= resources.getInteger(R.integer.seconds_increment); timeUpdater()  }
 
         // Ensures the time displayed is accurate on view creation - time value from viewmodel.
         timeUpdater()
@@ -120,18 +131,5 @@ class MeditationFragment : Fragment() {
         meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), activity as Context)
 
     }
-
-    /**
-     * startTimer
-     * Starts the Timer activity, with the duration specified in MeditationFragment.
-     */
-    private fun startTimer(view: View, duration : Int) {
-        val intent = Intent(activity, Timer::class.java).apply {
-            putExtra(EXTRA_TIMER, duration.toLong())
-        }
-
-        startActivity(intent)
-    }
-
 
 }

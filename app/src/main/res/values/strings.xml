@@ -21,4 +21,6 @@
     <string name="post_meditation_title">Post Meditation</string>
     <string name="timer_title">Meditation Timer</string>
     <string name="time_format">%02d:%02d</string>
+    <string name="next_week">Navigate to the next week</string>
+    <string name="previous_week">Navigate to previous week</string>
 </resources>
