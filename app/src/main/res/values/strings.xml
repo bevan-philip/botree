@@ -10,8 +10,9 @@
     <string name="preference_file_key">com.bevan.botree.PREFERENCES</string>
     <string name="saved_meditation_timer_key">saved_meditation_timer</string>
     <string name="post_meditation_message">Well done! You meditated for: </string>
-    <string name="add_word">Add a word</string>
-    <string name="hint_word">Word...</string>
+    <string name="add_reflection">Add a reflection</string>
+    <string name="hint_reflection">Reflection…</string>
     <string name="button_save">Save</string>
-    <string name="empty_not_saved">Word not saved because it is empty.</string>
+    <string name="empty_not_saved">Reflection not saved because it is empty.</string>
+    <string name="end_session">End session</string>
 </resources>

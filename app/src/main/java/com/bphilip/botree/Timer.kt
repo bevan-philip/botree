@@ -1,14 +1,21 @@
 package com.bphilip.botree
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
+import com.bphilip.botree.ui.meditation.MeditationViewModel
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDateTime
 import java.lang.Math.round
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
@@ -24,6 +31,9 @@ class Timer : AppCompatActivity() {
 
     private lateinit var mCountDownTimer: CountDownTimer
     private lateinit var mPauseButton : ImageButton
+
+    private lateinit var meditationViewModel : MeditationViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +54,11 @@ class Timer : AppCompatActivity() {
 
         mProgressCountDown.progress = 100
 
+        meditationViewModel =
+            ViewModelProviders.of(this).get(MeditationViewModel::class.java)
         startTimer()
 
     }
-
 
     fun startTimer() {
         mTextViewTimer = findViewById(R.id.countdown_timer)
@@ -96,6 +107,8 @@ class Timer : AppCompatActivity() {
         val intent = Intent(this, PostMeditation::class.java).apply {
             putExtra(EXTRA_TIMER, duration)
         }
+
+        meditationViewModel.insert(Meditation(0, Duration.ofMillis(duration), LocalDateTime.now()))
 
         startActivity(intent)
         finish()
