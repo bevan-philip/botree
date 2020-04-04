@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bphilip.botree.*
-import com.bphilip.botree.ui.reflections.NewWordActivity
+import com.bphilip.botree.ui.reflections.NewReflectionActivity
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
 
 class PostMeditation : AppCompatActivity() {
@@ -45,7 +45,7 @@ class PostMeditation : AppCompatActivity() {
 
         var newReflectionButton : Button = findViewById(R.id.button_add_reflection)
         newReflectionButton.setOnClickListener {
-            val intent = Intent(applicationContext, NewWordActivity::class.java)
+            val intent = Intent(applicationContext, NewReflectionActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 

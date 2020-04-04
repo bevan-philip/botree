@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.bphilip.botree.R
 
-class NewWordActivity : AppCompatActivity() {
+class NewReflectionActivity : AppCompatActivity() {
 
     private lateinit var editWordView: EditText
 

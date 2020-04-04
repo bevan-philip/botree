@@ -54,12 +54,11 @@ class ReflectionsFragment : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab?.setOnClickListener {
-            val intent = Intent(activity, NewWordActivity::class.java)
+            val intent = Intent(activity, NewReflectionActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 
         val textView: TextView = view.findViewById(R.id.textDate)
-
         reflectionsViewModel.text.observe(this, Observer {
             textView.text = it
         })
