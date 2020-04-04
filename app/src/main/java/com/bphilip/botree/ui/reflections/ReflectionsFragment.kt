@@ -24,7 +24,6 @@ class ReflectionsFragment : Fragment() {
 
     private lateinit var reflectionsViewModel: ReflectionsViewModel
     private val newWordActivityRequestCode = 1
-    private var mContext: Context? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +36,17 @@ class ReflectionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Finds the RecyclerView inside the view.
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
         val adapter =
             ReflectionListAdapter(activity as Context)
         adapter.notifyDataSetChanged()
+        // Connects the RecyclerView Adapter to the RecyclerView.
         recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = LinearLayoutManager(mContext as Context)
+        recyclerView?.layoutManager = LinearLayoutManager(activity as Context)
 
         reflectionsViewModel = ViewModelProviders.of(this).get(ReflectionsViewModel::class.java)
+        // When the LiveData updates, it updates the adapter.
         reflectionsViewModel.allReflections.observe(this, Observer { words ->
             // Update the cached copy of the words in the adapter.
             words?.let { adapter.setWords(it) }
@@ -52,7 +54,7 @@ class ReflectionsFragment : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab?.setOnClickListener {
-            val intent = Intent(mContext, NewWordActivity::class.java)
+            val intent = Intent(activity, NewWordActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 
@@ -73,32 +75,26 @@ class ReflectionsFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Utility.createReflectionFromIntent(requestCode, resultCode, data, mContext as Context, reflectionsViewModel)
+        Utility.createReflectionFromIntent(requestCode, resultCode, data, activity as Context, reflectionsViewModel)
 
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mContext = null
-    }
-
-    fun changeTime(weekChange : Long) {
+    private fun changeTime(weekChange : Long) {
         reflectionsViewModel.weeksBehind += weekChange
 
+        // Can't store data in the future (from the current date), so no point allowing it.
         if (reflectionsViewModel.weeksBehind < 0) {
             reflectionsViewModel.weeksBehind = 0
         }
 
+        // Finds the start and end dates of the week.
         val startDate = LocalDateTime.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
         val endDate = LocalDateTime.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6)
 
+        // Updates the text at the top of the screen.
         reflectionsViewModel.text.value = String.format("%s - %s", startDate.format(DateTimeFormatter.ISO_DATE), endDate.format(DateTimeFormatter.ISO_DATE))
 
+        // Changes the LiveData query.
         reflectionsViewModel.changeDates(startDate, endDate)
     }
 }
