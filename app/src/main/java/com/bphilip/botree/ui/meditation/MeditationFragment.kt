@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.*
+import com.bphilip.botree.ui.timer.Timer
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -34,11 +35,6 @@ class MeditationFragment : Fragment() {
     private lateinit var mButtonSecondsUp : ImageButton
     private lateinit var mButtonSecondsDown : ImageButton
     private lateinit var sharedPref : SharedPreferences
-
-
-    private val newWordActivityRequestCode = 1
-
-    lateinit var dataPasser: OnTimerStart
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,7 +75,7 @@ class MeditationFragment : Fragment() {
         mButtonSecondsDown = getView()?.findViewById(R.id.secondsDown) as ImageButton
 
         // Starts the timer.
-        mButtonStart.setOnClickListener { v -> dataPasser.onTimerStart(meditationViewModel.startTimeInMillis, v) }
+        mButtonStart.setOnClickListener { v-> startTimer(v, meditationViewModel.startTimeInMillis) }
         // Allows changing the timer
         mButtonMinutesUp.setOnClickListener { meditationViewModel.startTimeInMillis += 60000; timeUpdater() }
         mButtonMinutesDown.setOnClickListener { meditationViewModel.startTimeInMillis -= 60000; timeUpdater()  }
@@ -89,12 +85,15 @@ class MeditationFragment : Fragment() {
         // Ensures the time displayed is accurate on view creation - time value from viewmodel.
         timeUpdater()
 
+        // Find the recyclerView, and adapter.
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_meditation)
         val adapter = MeditationListAdapter(activity as Context)
         adapter.notifyDataSetChanged()
+        // Attach recyclerView to the adapter.
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
 
+        // Update the adapter when the data changes.
         meditationViewModel.allMeditations.observe(this, Observer { words ->
             // Update the cached copy of the words in the adapter.
             words?.let { adapter.setWords(it) }
@@ -104,10 +103,12 @@ class MeditationFragment : Fragment() {
     private fun timeUpdater() {
         mTextViewTimer = view?.findViewById(R.id.time_meditation) as TextView
 
+        // Ensure the time can't go below 0.
         if (meditationViewModel.startTimeInMillis < 0) {
             meditationViewModel.startTimeInMillis = 0
         }
 
+        // If the passes a threshold, reduce the size of it.
         if (meditationViewModel.startTimeInMillis >= R.integer.max_default_font_size) {
             mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 72f)
         }
@@ -115,12 +116,21 @@ class MeditationFragment : Fragment() {
             mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88f)
         }
 
+        // And then update the visual time.
         meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), activity as Context)
 
     }
 
-    interface OnTimerStart {
-         fun onTimerStart(timer : Int, v: View)
+    /**
+     * startTimer
+     * Starts the Timer activity, with the duration specified in MeditationFragment.
+     */
+    private fun startTimer(view: View, duration : Int) {
+        val intent = Intent(activity, Timer::class.java).apply {
+            putExtra(EXTRA_TIMER, duration.toLong())
+        }
+
+        startActivity(intent)
     }
 
 

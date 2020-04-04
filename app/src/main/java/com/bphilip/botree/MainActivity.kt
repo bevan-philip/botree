@@ -19,7 +19,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
-class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart, ViewModelStoreOwner {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedPref : SharedPreferences
 
@@ -44,35 +44,5 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart, ViewM
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
     }
-
-    /**
-     * startTimer
-     * Starts the Timer activity, with the duration specified in MeditationFragment.
-     */
-    fun startTimer(view: View, duration : Int) {
-        val intent = Intent(this, Timer::class.java).apply {
-            putExtra(EXTRA_TIMER, duration.toLong())
-        }
-
-        startActivity(intent)
-    }
-
-    override fun onTimerStart(timer : Int, v : View) {
-        with (sharedPref.edit()) {
-            putInt(getString(R.string.saved_meditation_timer_key), timer)
-            apply()
-        }
-
-        startTimer(v, timer)
-    }
-
-    private val appViewModelStore: ViewModelStore by lazy {
-        ViewModelStore()
-    }
-
-    override fun getViewModelStore(): ViewModelStore {
-        return appViewModelStore
-    }
-
 
 }
