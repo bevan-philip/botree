@@ -1,8 +1,6 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.post_meditation
 
-import android.app.Application
 import androidx.lifecycle.*
-import kotlinx.coroutines.launch
 
 class PostMeditationViewModel : ViewModel()  {
 

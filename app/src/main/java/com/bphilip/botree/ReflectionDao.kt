@@ -8,7 +8,7 @@ import androidx.room.Query
 
 
 @Dao
-interface WordDao {
+interface ReflectionDao {
 
     @Query("SELECT * from reflections_table WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getSortedReflections(start : Long, end : Long): LiveData<List<Reflection>>

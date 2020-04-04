@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.bphilip.botree.Reflection
 import com.bphilip.botree.DataRepository
-import com.bphilip.botree.Meditation
-import com.bphilip.botree.WordRoomDatabase
+import com.bphilip.botree.ReflectionRoomDatabase
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -24,7 +23,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
+        val wordsDao = ReflectionRoomDatabase.getDatabase(application, viewModelScope).reflectionDao()
         repository = DataRepository(wordsDao)
         allReflections = repository.allReflections
         changeDates(LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1), LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6))

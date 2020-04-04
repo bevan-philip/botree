@@ -6,13 +6,19 @@
     <string name="up_arrow">Up Arrow</string>
     <string name="down_arrow">Down Arrow</string>
     <string name="timer_start">Start the timer</string>
-    <string name="timer_stop">Stop the timer</string>
+    <string name="timer_pause">Pauses the timer</string>
+    <string name="timer_end">Ends the timer</string>
     <string name="preference_file_key">com.bevan.botree.PREFERENCES</string>
     <string name="saved_meditation_timer_key">saved_meditation_timer</string>
     <string name="post_meditation_message">Well done! You meditated for: </string>
     <string name="add_reflection">Add a reflection</string>
     <string name="hint_reflection">Reflection…</string>
     <string name="button_save">Save</string>
-    <string name="empty_not_saved">Reflection not saved because it is empty.</string>
+    <string name="not_saved">Reflection not saved.</string>
     <string name="end_session">End session</string>
+    <string name="saved">Reflection saved.</string>
+    <string name="new_reflection_title">New Reflection</string>
+    <string name="post_meditation_title">Post Meditation</string>
+    <string name="timer_title">Meditation Timer</string>
+    <string name="time_format">%02d:%02d</string>
 </resources>

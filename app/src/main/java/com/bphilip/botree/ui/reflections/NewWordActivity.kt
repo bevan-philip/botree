@@ -1,4 +1,4 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.reflections
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import com.bphilip.botree.R
 
 class NewWordActivity : AppCompatActivity() {
 
