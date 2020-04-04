@@ -75,17 +75,8 @@ class ReflectionsFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let {
-                val word = Reflection(0, it, LocalDateTime.now())
-                reflectionsViewModel.insert(word)
-            }
-        } else {
-            Toast.makeText(
-                mContext,
-                R.string.empty_not_saved,
-                Toast.LENGTH_LONG).show()
-        }
+        Utility.createReflectionFromIntent(requestCode, resultCode, data, mContext as Context, reflectionsViewModel)
+
     }
 
     override fun onAttach(context: Context) {

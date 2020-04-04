@@ -11,11 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NewWordActivity"></activity>
+        <activity android:name=".NewWordActivity"
+            android:parentActivityName=".MainActivity"
+            >
+
+        </activity>
         <activity
             android:name=".PostMeditation"
             android:label="Post Meditation"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:allowTaskReparenting="true">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data

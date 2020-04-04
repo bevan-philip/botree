@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -18,7 +20,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
-class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
+class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart, ViewModelStoreOwner {
 
     private lateinit var sharedPref : SharedPreferences
 
@@ -42,7 +44,6 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
         sharedPref = this.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
-
     }
 
     /**
@@ -64,6 +65,14 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
         }
 
         startTimer(v, timer)
+    }
+
+    private val appViewModelStore: ViewModelStore by lazy {
+        ViewModelStore()
+    }
+
+    override fun getViewModelStore(): ViewModelStore {
+        return appViewModelStore
     }
 
 
