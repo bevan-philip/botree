@@ -4,25 +4,28 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bphilip.botree.ui.timer.Timer
 import com.bphilip.botree.ui.meditation.MeditationFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
-class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
+class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart, ViewModelStoreOwner {
 
     private lateinit var sharedPref : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidThreeTen.init(this)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
@@ -39,7 +42,6 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
 
         sharedPref = this.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-
 
     }
 
@@ -62,6 +64,14 @@ class MainActivity : AppCompatActivity(), MeditationFragment.OnTimerStart {
         }
 
         startTimer(v, timer)
+    }
+
+    private val appViewModelStore: ViewModelStore by lazy {
+        ViewModelStore()
+    }
+
+    override fun getViewModelStore(): ViewModelStore {
+        return appViewModelStore
     }
 
 

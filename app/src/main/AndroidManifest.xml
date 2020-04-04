@@ -11,19 +11,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".PostMeditation"
-            android:label="Post Meditation"
-            android:parentActivityName=".MainActivity">
+        <activity android:name=".ui.reflections.NewWordActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/new_reflection_title"
+            >
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".Timer"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="Meditation Timer"
+            android:name=".ui.post_meditation.PostMeditation"
+            android:label="@string/post_meditation_title"
+            android:parentActivityName=".MainActivity"
+            android:allowTaskReparenting="true">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.timer.Timer"
+            android:label="@string/timer_title"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
 
@@ -34,7 +44,6 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
