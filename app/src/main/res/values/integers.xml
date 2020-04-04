@@ -4,4 +4,6 @@
     <integer name="default_meditation_timer">600000</integer>
     <integer name="max_default_font_size">6000000</integer>
     <integer name="newWordActivityRequestCode">1</integer>
+    <integer name="minutes_increment">60000</integer>
+    <integer name="seconds_increment">5000</integer>
 </resources>

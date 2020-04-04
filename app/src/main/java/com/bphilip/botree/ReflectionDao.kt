@@ -24,4 +24,7 @@ interface ReflectionDao {
 
     @Query("DELETE FROM reflections_table")
     suspend fun deleteAllReflections()
+
+    @Query("DELETE FROM meditations_table")
+    suspend fun deleteAllMeditations()
 }
