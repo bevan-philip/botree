@@ -50,7 +50,7 @@ class MeditationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         meditationViewModel =
-            ViewModelProviders.of(this).get(MeditationViewModel::class.java)
+            ViewModelProviders.of(this.activity as FragmentActivity).get(MeditationViewModel::class.java)
         val textView: TextView = view.findViewById(R.id.time_meditation)
 
         meditationViewModel.text.observe(this, Observer {
@@ -65,7 +65,9 @@ class MeditationFragment : Fragment() {
                 getString(R.string.saved_meditation_timer_key),
                 resources.getInteger(R.integer.default_meditation_timer)
             )
+            Log.i("MeditationFragment", "Loading startTimeInMillis from SharedPrefs.")
             meditationViewModel.loadStartTime = false
+            Log.i("MeditationFragment", meditationViewModel.loadStartTime.toString())
         }
 
         // Hooks the timer and start buttons.
