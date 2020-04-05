@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity() {
         sharedPref = this.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
+        var meditationAlarm : MeditationAlarm = MeditationAlarm()
+        meditationAlarm.startAlarmBroadcastReceiver(applicationContext)
+
     }
 
 }

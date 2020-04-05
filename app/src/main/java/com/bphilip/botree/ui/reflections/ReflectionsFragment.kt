@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,7 +46,7 @@ class ReflectionsFragment : Fragment() {
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(activity as Context)
 
-        reflectionsViewModel = ViewModelProviders.of(this).get(ReflectionsViewModel::class.java)
+        reflectionsViewModel = ViewModelProviders.of(this.activity as FragmentActivity).get(ReflectionsViewModel::class.java)
         // When the LiveData updates, it updates the adapter.
         reflectionsViewModel.allReflections.observe(this, Observer { words ->
             // Update the cached copy of the words in the adapter.
