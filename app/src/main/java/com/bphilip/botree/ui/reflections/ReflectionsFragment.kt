@@ -3,9 +3,8 @@ package com.bphilip.botree.ui.reflections
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -14,17 +13,56 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bphilip.botree.*
+import com.bphilip.botree.R
+import com.bphilip.botree.Utility
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
 import java.util.*
+import kotlin.math.abs
+
 
 class ReflectionsFragment : Fragment() {
 
     private lateinit var reflectionsViewModel: ReflectionsViewModel
     private val newWordActivityRequestCode = 1
+    private lateinit var recyclerView: RecyclerView
+
+    val gesture: GestureDetector = GestureDetector(
+        activity,
+        object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent?): Boolean {
+                return true
+            }
+
+            override fun onFling(
+                e1: MotionEvent, e2: MotionEvent, velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                Log.i("ReflectionsFragment", "onFling has been called!")
+                val SWIPE_MIN_DISTANCE = 120
+                val SWIPE_MAX_OFF_PATH = 250
+                val SWIPE_THRESHOLD_VELOCITY = 200
+                try {
+                    if (abs(e1.y - e2.y) > SWIPE_MAX_OFF_PATH) return false
+                    if (e1.x - e2.x > SWIPE_MIN_DISTANCE
+                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
+                    ) {
+
+                        changeTime(-1)
+                    } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE
+                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
+                    ) {
+                        changeTime(1)
+                    }
+                } catch (e: Exception) {
+                    // nothing
+                }
+                return super.onFling(e1, e2, velocityX, velocityY)
+            }
+        })
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,13 +70,14 @@ class ReflectionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_reflections, container, false)
+        root.setOnTouchListener { v, event -> gesture.onTouchEvent(event) }
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Finds the RecyclerView inside the view.
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
+        recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
         val adapter =
             ReflectionListAdapter(activity as Context)
         adapter.notifyDataSetChanged()
@@ -70,6 +109,9 @@ class ReflectionsFragment : Fragment() {
         val weeksPlusOne = view.findViewById<ImageButton>(R.id.button_weeksplusone)
         weeksPlusOne.setOnClickListener { changeTime(-1) }
 
+        recyclerView.setOnTouchListener { v, event ->  gesture.onTouchEvent(event); v.performClick() }
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,5 +138,10 @@ class ReflectionsFragment : Fragment() {
 
         // Changes the LiveData query.
         reflectionsViewModel.changeDates(startDate, endDate)
+        
+
     }
+
+
+
 }

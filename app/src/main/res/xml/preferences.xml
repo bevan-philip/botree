@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:key="notifications_category"
+        app:title="Notifications">
+
+        <SwitchPreferenceCompat
+            app:key="@string/notification_enable_key"
+            app:title="@string/preference_notification_title"
+            app:summary="@string/preference_notification_description"/>
+
+        <Preference
+            app:key="@string/time_change_key"
+            app:title="Notification Time"
+            app:summary="Change the time when the notification will be delivered">
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="webview_category"
+        app:title="User Guide">
+
+        <Preference
+            app:key="user_guide"
+            app:title="User Guide"
+            app:summary="View the user guide for this application">
+            <intent
+                android:targetPackage="com.bphilip.botree"
+                android:targetClass="com.bphilip.botree.UserGuideView"/>
+
+        </Preference>
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

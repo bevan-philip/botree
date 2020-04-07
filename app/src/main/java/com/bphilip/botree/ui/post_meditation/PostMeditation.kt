@@ -19,6 +19,7 @@ class PostMeditation : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
         setContentView(R.layout.activity_post_meditation)
 
         postMeditationViewModel =
@@ -49,11 +50,6 @@ class PostMeditation : AppCompatActivity() {
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        onSupportNavigateUp()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

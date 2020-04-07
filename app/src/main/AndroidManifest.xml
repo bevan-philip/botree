@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bphilip.botree">
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,10 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.reflections.NewReflectionActivity"
-            android:parentActivityName=".MainActivity"
+        <activity android:name=".UserGuideView"
+            android:label="@string/title_user_guide"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.reflections.NewReflectionActivity"
             android:label="@string/new_reflection_title"
-            >
+            android:parentActivityName=".MainActivity">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -22,9 +34,9 @@
         </activity>
         <activity
             android:name=".ui.post_meditation.PostMeditation"
+            android:allowTaskReparenting="true"
             android:label="@string/post_meditation_title"
-            android:parentActivityName=".MainActivity"
-            android:allowTaskReparenting="true">
+            android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -51,10 +63,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".AlarmBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
 
+        <receiver
+            android:name=".AlarmBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
+
 </manifest>
