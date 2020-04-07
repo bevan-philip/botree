@@ -15,6 +15,7 @@ class NewReflectionActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
         setContentView(R.layout.activity_new_word)
         editWordView = findViewById(R.id.edit_word)
 
@@ -34,5 +35,15 @@ class NewReflectionActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_REPLY = "com.bphilip.botree.wordlistsql.REPLY"
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
     }
 }
