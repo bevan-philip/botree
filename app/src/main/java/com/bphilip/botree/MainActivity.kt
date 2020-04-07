@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.findNavController
@@ -47,5 +48,7 @@ class MainActivity : AppCompatActivity() {
         meditationAlarm.startAlarmBroadcastReceiver(applicationContext)
 
     }
+
+
 
 }

@@ -41,4 +41,5 @@ class ReflectionListAdapter internal constructor(
     }
 
     override fun getItemCount() = reflections.size
+
 }
