@@ -17,6 +17,6 @@ class Reflection(
 @Entity(tableName = "meditations_table")
 class Meditation(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id : Int = 0,
-    @ColumnInfo(name = "duration") val duration : Duration?,
+    @ColumnInfo(name = "duration") val duration : Long,
     @ColumnInfo(name = "date") val date : LocalDateTime?
 )
