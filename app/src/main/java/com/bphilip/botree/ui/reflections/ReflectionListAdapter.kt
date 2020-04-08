@@ -23,7 +23,7 @@ class ReflectionListAdapter internal constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
-        val itemView = inflater.inflate(R.layout.recyclerview_item, parent, false)
+        val itemView = inflater.inflate(R.layout.recyclerview_reflections, parent, false)
         return WordViewHolder(itemView)
     }
 
@@ -31,7 +31,7 @@ class ReflectionListAdapter internal constructor(
         val current = reflections[position]
         holder.titleItemView.text = current.word
         holder.dateItemView.text = String.format("%s | %s",
-            current.date?.format(DateTimeFormatter.ISO_DATE),
+            current.date?.format(DateTimeFormatter.ofPattern("EEEE")),
             current.date?.format(DateTimeFormatter.ofPattern("HH:mm")))
     }
 

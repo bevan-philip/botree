@@ -23,6 +23,8 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
         )
     }
 
+    var averageMeditation: LiveData<Long> = reflectionDao.getAvgMeditation()
+
     var allMeditations : LiveData<List<Meditation>> = reflectionDao.getSortedMeditations(
         LocalDateTimeToTimeStamp(LocalDateTime.now().minusDays(6)) as Long,
         LocalDateTimeToTimeStamp(LocalDateTime.now()) as Long
@@ -36,6 +38,7 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
         reflectionDao.insertMeditation(meditation)
     }
 
+    // Requires both variables, because the endTime must be changed for the LiveView to update.
     fun changeTime(stime : LocalDateTime, etime: LocalDateTime) {
         startTime.value = stime
         endTime.value = etime
