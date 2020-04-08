@@ -13,19 +13,25 @@
 
         <TextView
             android:id="@+id/date"
-            style="@style/word_title"
+            style="@style/reflection_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_orange_light"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/textView"
-            style="@style/word_title"
+            style="@style/reflection_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_orange_light"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/date"
+        />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

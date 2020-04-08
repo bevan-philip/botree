@@ -18,6 +18,7 @@
     <string name="post_meditation_message">Well done! You meditated for: </string>
     <string name="add_reflection">Add a reflection</string>
     <string name="hint_reflection">Reflection…</string>
+    <string name="average_time_meditated">You have meditated for an average of</string>
     <string name="button_save">Save</string>
     <string name="not_saved">Reflection not saved.</string>
     <string name="end_session">End session</string>

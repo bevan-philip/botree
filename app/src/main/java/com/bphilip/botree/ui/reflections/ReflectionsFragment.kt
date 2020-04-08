@@ -70,7 +70,7 @@ class ReflectionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_reflections, container, false)
-        root.setOnTouchListener { v, event -> gesture.onTouchEvent(event) }
+        root.setOnTouchListener { _, event -> gesture.onTouchEvent(event) }
         return root
     }
 

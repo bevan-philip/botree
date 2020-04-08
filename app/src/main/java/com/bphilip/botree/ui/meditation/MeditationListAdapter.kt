@@ -29,7 +29,7 @@ class MeditationListAdapter internal constructor(
         val current = meditations[position]
         holder.titleItemView.text = String.format("%s | Duration: %s",
             current.date?.format(DateTimeFormatter.ISO_DATE),
-            Utility.timeFormatter(current.duration?.toMillis() as Long, holder.titleItemView.context)
+            Utility.timeFormatter(current.duration, holder.titleItemView.context    )
         )
     }
 

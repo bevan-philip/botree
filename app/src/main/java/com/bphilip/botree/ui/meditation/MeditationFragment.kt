@@ -1,6 +1,5 @@
 package com.bphilip.botree.ui.meditation
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -21,9 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.*
 import com.bphilip.botree.ui.timer.Timer
-import org.threeten.bp.Duration
-import org.threeten.bp.LocalDateTime
-import java.util.concurrent.TimeUnit
 
 
 class MeditationFragment : Fragment() {
@@ -111,6 +106,10 @@ class MeditationFragment : Fragment() {
             // Update the cached copy of the words in the adapter.
             words?.let { adapter.setWords(it) }
         })
+
+        val averageTime = view.findViewById<TextView>(R.id.text_average)
+
+        meditationViewModel.averageMeditation.observe(this, Observer { averageTime.text  = Utility.timeFormatter(it, context as Context) })
     }
 
     private fun timeUpdater() {

@@ -115,7 +115,7 @@ class Timer : AppCompatActivity() {
         meditationViewModel.insert(
             Meditation(
                 0,
-                Duration.ofMillis(duration),
+                duration,
                 LocalDateTime.now()
             )
         )
