@@ -3,8 +3,12 @@ package com.bphilip.botree.ui.post_meditation
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bphilip.botree.*
@@ -63,5 +67,22 @@ class PostMeditation : AppCompatActivity() {
             reflectionsViewModel
         )
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_post_meditation, menu)
+
+        val shareItem: MenuItem = menu.findItem(R.id.action_share)
+        val shareActionProvider: ShareActionProvider = MenuItemCompat.getActionProvider(shareItem) as ShareActionProvider
+
+        val sharingIntent: Intent = Intent(Intent.ACTION_SEND)
+            .setType("text/plain")
+            .putExtra(Intent.EXTRA_SUBJECT, "\n\n")
+            .putExtra(Intent.EXTRA_TEXT, getString(R.string.post_meditation_share_text, postMeditationViewModel.text.value))
+
+        shareActionProvider.setShareIntent(sharingIntent)
+
+        return true
+    }
+
 
 }

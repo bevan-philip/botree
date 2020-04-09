@@ -27,6 +27,7 @@
     <string name="post_meditation_title">Post Meditation</string>
     <string name="timer_title">Meditation Timer</string>
     <string name="time_format">%02d:%02d</string>
+    <string name="post_meditation_share_text">I\'ve meditated for %s long today! Join me in using Bo Tree.</string>
     <string name="next_week">Navigate to the next week</string>
     <string name="previous_week">Navigate to previous week</string>
     <string name="preference_notification_title">Daily notification</string>
@@ -34,4 +35,9 @@
     <string name="preference_time_change_title">Notification Time</string>
     <string name="preference_time_change_description">Set when the notification should be displayed.</string>
     <string name="preference_notification_no_time_set">No time selected.</string>
+    <string name="this_weeks_meditations">Details on your meditations this week</string>
+    <string name="meditation_channel_id">meditation_notification</string>
+    <string name="meditation_channel_title">Meditation Notification</string>
+    <string name="meditation_notification_title">Meditation Reminder</string>
+    <string name="meditation_notification_description">It\'s time to meditate.</string>
 </resources>

@@ -26,7 +26,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         val wordsDao = ReflectionRoomDatabase.getDatabase(application, viewModelScope).reflectionDao()
         repository = DataRepository(wordsDao)
         allReflections = repository.allReflections
-        changeDates(LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1), LocalDateTime.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6))
+        changeDates(LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1), LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6))
     }
 
     /**
@@ -40,8 +40,8 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         repository.insertReflection(reflection)
     }
 
-    fun changeDates(start : LocalDateTime, end : LocalDateTime) {
-        repository.changeTime(start, end)
+    fun changeDates(start : LocalDate, end : LocalDate) {
+        repository.changeTime(start.atTime(0, 0), end.atTime(23, 59))
     }
 
     private val _text = MutableLiveData<String>().apply {

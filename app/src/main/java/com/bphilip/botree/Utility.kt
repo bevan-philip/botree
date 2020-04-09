@@ -6,6 +6,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.bphilip.botree.ui.reflections.NewReflectionActivity
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.concurrent.TimeUnit
 

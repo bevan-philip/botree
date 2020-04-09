@@ -5,10 +5,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
+import org.threeten.bp.*
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
 @Database(entities = [Reflection::class, Meditation::class], version = 2, exportSchema = false)
@@ -47,6 +44,19 @@ abstract class ReflectionRoomDatabase : RoomDatabase() {
 
 class Converters {
     @TypeConverter
+    fun fromDate(value: Long?): LocalDate? {
+        return value?.let {
+            LocalDate.ofEpochDay(value)
+        }
+
+    }
+
+    @TypeConverter
+    fun LocalDateToTimestamp(date: LocalDate?): Long? {
+        return date?.toEpochDay()
+    }
+
+    @TypeConverter
     fun fromTimestamp(value: Long?): LocalDateTime? {
         return value?.let {
             LocalDateTime.ofInstant(
@@ -58,15 +68,5 @@ class Converters {
     @TypeConverter
     fun LocalDateTimeToTimestamp(date: LocalDateTime?): Long? {
         return date?.atZone(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
-    }
-
-    @TypeConverter
-    fun DurationToTimeStamp(duration : Duration?) : Long? {
-        return duration?.toMillis()
-    }
-
-    @TypeConverter
-    fun TimeStampToDuration(value : Long) : Duration? {
-        return Duration.ofMillis(value)
     }
 }

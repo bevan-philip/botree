@@ -15,7 +15,9 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     // LiveData gives us updated words when they change.
     val allMeditations: LiveData<List<Meditation>>
     val averageMeditation: LiveData<Long>
+    val meditatedOnDay: List<LiveData<Long>>
     var startTimeInMillis : Int = 600000
+    val meditatedToday: LiveData<Long>
 
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
@@ -24,6 +26,8 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         repository = DataRepository(reflectionDao)
         allMeditations = repository.allMeditations
         averageMeditation = repository.averageMeditation
+        meditatedOnDay = repository.meditatedOnDay
+        meditatedToday = repository.meditatedToday
     }
 
     private val _text = MutableLiveData<String>().apply {
@@ -43,6 +47,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     fun insert(meditation: Meditation) = viewModelScope.launch {
         repository.insertMeditation(meditation)
     }
+
 
 
 }
