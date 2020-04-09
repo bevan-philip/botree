@@ -1,6 +1,7 @@
 package com.bphilip.botree.ui.timer
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -10,12 +11,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import com.bphilip.botree.*
+import com.bphilip.botree.EXTRA_TIMER
+import com.bphilip.botree.Meditation
+import com.bphilip.botree.R
+import com.bphilip.botree.Utility
 import com.bphilip.botree.ui.meditation.MeditationViewModel
 import com.bphilip.botree.ui.post_meditation.PostMeditation
-import org.threeten.bp.Duration
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalDate
 import kotlin.math.roundToInt
+
 
 class Timer : AppCompatActivity() {
 
@@ -116,9 +120,12 @@ class Timer : AppCompatActivity() {
             Meditation(
                 0,
                 duration,
-                LocalDateTime.now()
+                LocalDate.now()
             )
         )
+        
+        val mp: MediaPlayer? = MediaPlayer.create(view.context, R.raw.bell)
+        mp?.start()
 
         startActivity(intent)
         finish()

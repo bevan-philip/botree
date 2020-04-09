@@ -19,8 +19,8 @@ interface ReflectionDao {
     @Query("SELECT avg(duration) from meditations_table")
     fun getAvgMeditation(): LiveData<Long>
 
-    @Query("SELECT count(date) FROM meditations_table WHERE date = :date")
-    fun getCountMeditationsOnDate(date: Long): LiveData<Int>
+    @Query("SELECT count(duration) from meditations_table WHERE date = :date")
+    fun getCountMeditationsOnDate(date: Long): LiveData<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertReflection(reflection: Reflection)

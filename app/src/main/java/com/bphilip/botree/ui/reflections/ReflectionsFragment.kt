@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.R
 import com.bphilip.botree.Utility
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
@@ -130,8 +131,8 @@ class ReflectionsFragment : Fragment() {
         }
 
         // Finds the start and end dates of the week.
-        val startDate = LocalDateTime.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
-        val endDate = LocalDateTime.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6)
+        val startDate = LocalDate.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
+        val endDate = LocalDate.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6)
 
         // Updates the text at the top of the screen.
         reflectionsViewModel.text.value = String.format("%s - %s", startDate.format(DateTimeFormatter.ISO_DATE), endDate.format(DateTimeFormatter.ISO_DATE))

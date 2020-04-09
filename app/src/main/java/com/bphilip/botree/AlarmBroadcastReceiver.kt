@@ -18,45 +18,45 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         showNotification(context)
     }
 
-    fun showNotification(context: Context?) {
-        var meditationAlarm = MeditationAlarm()
+    private fun showNotification(context: Context?) {
+        val meditationAlarm = MeditationAlarm()
         meditationAlarm.startAlarmBroadcastReceiver(context as Context)
 
-        var channel_id: String = "test_channel"
-        var name: CharSequence = context?.resources?.getString(R.string.app_name) as String
-        var mBuilder: NotificationCompat.Builder
-        var notificationIntent = Intent(context, MainActivity::class.java)
-        var bundle = Bundle()
+        val channelID: String = context.resources.getString(R.string.meditation_channel_id)
+        val channelName: CharSequence = context.resources.getString(R.string.meditation_channel_title)
+        val notificationTitle = context.resources.getString(R.string.meditation_notification_title)
+        val mBuilder: NotificationCompat.Builder
+        val notificationIntent = Intent(context, MainActivity::class.java)
+        val bundle = Bundle()
 
         notificationIntent.putExtras(bundle)
-//        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        var contentIntent: PendingIntent =
+        val contentIntent: PendingIntent =
             PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        var mNotificationManager: NotificationManager =
+        val mNotificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var mChannel: NotificationChannel =
-                NotificationChannel(channel_id, name, NotificationManager.IMPORTANCE_DEFAULT)
+            val mChannel: NotificationChannel =
+                NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_DEFAULT)
             mNotificationManager.createNotificationChannel(mChannel)
-            mBuilder = NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.mipmap.ic_launcher)
+            mBuilder = NotificationCompat.Builder(context, channelID)
+                .setSmallIcon(R.mipmap.ic_botree_icon)
                 .setLights(Color.RED, 300, 300)
-                .setChannelId(channel_id)
-                .setContentTitle("Title")
+                .setChannelId(channelID)
+                .setContentTitle(notificationTitle)
         }
         else {
-            mBuilder = NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.mipmap.ic_launcher)
+            mBuilder = NotificationCompat.Builder(context, channelID)
+                .setSmallIcon(R.mipmap.ic_botree_icon)
                 .setLights(Color.RED, 300, 300)
-                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
-                .setContentTitle("Title")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentTitle(notificationTitle)
         }
 
         mBuilder.setContentIntent(contentIntent)
-        mBuilder.setContentText("test")
+        mBuilder.setContentText(context.resources.getString(R.string.meditation_notification_description))
         mBuilder.setAutoCancel(true)
         mNotificationManager.notify(1, mBuilder.build())
 
