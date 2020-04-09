@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.*
 import com.bphilip.botree.ui.timer.Timer
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 
 class MeditationFragment : Fragment() {
@@ -107,9 +110,43 @@ class MeditationFragment : Fragment() {
             words?.let { adapter.setWords(it) }
         })
 
+        var tableRow: TableRow = view.findViewById(R.id.tableRow)
+        var tableElement = 0
+
+        for (day in meditationViewModel.meditatedOnDay) {
+            val currentValue = (tableRow.virtualChildCount - 1) - tableElement
+            val tableTextView: TextView = tableRow.getVirtualChildAt(currentValue) as TextView
+            day.observe(this, Observer {
+                if (it < 1) {
+                    tableTextView.setBackgroundResource(R.color.negative)
+                }
+                else {
+                    tableTextView.setBackgroundResource(R.color.positive)
+                }
+            })
+
+            tableTextView.text = LocalDate.now().minusDays(tableElement.toLong()).format(DateTimeFormatter.ofPattern("EEE"))
+
+            tableElement += 1
+            Log.i("MeditationFragment", tableElement.toString())
+        }
+
+        Log.i("MeditatedFragment", "MeditatedToday " + meditationViewModel.meditatedToday.value.toString())
+
         val averageTime = view.findViewById<TextView>(R.id.text_average)
 
-        meditationViewModel.averageMeditation.observe(this, Observer { averageTime.text  = Utility.timeFormatter(it, context as Context) })
+        meditationViewModel.averageMeditation.observe(this, Observer {
+            // Stop crashes on initial startup
+            if (it == null) {
+                averageTime.text = "00:00"
+            }
+            else {
+                averageTime.text = Utility.timeFormatter(it, context as Context)
+            }
+        })
+
+
+
     }
 
     private fun timeUpdater() {
