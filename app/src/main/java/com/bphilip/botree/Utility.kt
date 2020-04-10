@@ -6,10 +6,12 @@ import android.content.Intent
 import android.widget.Toast
 import com.bphilip.botree.ui.reflections.NewReflectionActivity
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
-import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.concurrent.TimeUnit
 
+/**
+ * Basic utility class to reduce code repetition.
+ */
 object Utility {
     /**
      * timeFormatter(timeInMillis, context)
@@ -36,16 +38,18 @@ object Utility {
         ctx : Context,
         reflectionsViewModel : ReflectionsViewModel) {
         if (requestCode == ctx.resources.getInteger(R.integer.newWordActivityRequestCode) && resultCode == Activity.RESULT_OK) {
+            // Takes the reflection, gets the data and stores it in the database.
             data?.getStringExtra(NewReflectionActivity.EXTRA_REPLY)?.let {
-                val word = Reflection(0, it, LocalDateTime.now())
-                reflectionsViewModel.insert(word)
+                val reflection = Reflection(0, it, LocalDateTime.now())
+                reflectionsViewModel.insert(reflection)
             }
         // Create Toasts depending on outcome.
             Toast.makeText(
                 ctx,
                 R.string.saved,
                 Toast.LENGTH_LONG).show()
-        } else {
+        }
+        else {
             Toast.makeText(
                 ctx,
                 R.string.not_saved,

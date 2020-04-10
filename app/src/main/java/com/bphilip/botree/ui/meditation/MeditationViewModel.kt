@@ -16,33 +16,41 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     val allMeditations: LiveData<List<Meditation>>
     val averageMeditation: LiveData<Long>
     val meditatedOnDay: List<LiveData<Long>>
-    var startTimeInMillis : Int = 600000
-    val meditatedToday: LiveData<Long>
+    private val _startTimeInMillis : MutableLiveData<Int> = MutableLiveData<Int>().apply {
+        value = 600000
+    }
+
+    val startTimeInMillis: MutableLiveData<Int> = _startTimeInMillis
 
     init {
-        // Gets reference to WordDao from WordRoomDatabase to construct
-        // the correct WordRepository.
-        val reflectionDao = ReflectionRoomDatabase.getDatabase(application, viewModelScope).reflectionDao()
+        // Gets the reflectionsDao, so the repository talks to the right Dao.
+        val reflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
         repository = DataRepository(reflectionDao)
+
+        // Looks up all the LiveData values to the LiveData values in the repository.
         allMeditations = repository.allMeditations
         averageMeditation = repository.averageMeditation
         meditatedOnDay = repository.meditatedOnDay
-        meditatedToday = repository.meditatedToday
     }
 
+    // Formats the time stored in startTimeInMillis by default.
     private val _text = MutableLiveData<String>().apply {
-        value = Utility.timeFormatter(startTimeInMillis.toLong(), application.applicationContext)
+        value = Utility.timeFormatter(startTimeInMillis.value?.toLong() as Long, application.applicationContext)
     }
     val text: MutableLiveData<String> = _text
 
+    // Whether to load the startTime from SharedPreferences: we only want to load the value on
+    // app launch, otherwise we want to save any modifications the user has made.
     var loadStartTime = true
 
     /**
-     * The implementation of insert() in the database is completely hidden from the UI.
-     * Room ensures that you're not doing any long running operations on
-     * the main thread, blocking the UI, so we don't need to handle changing Dispatchers.
-     * ViewModels have a coroutine scope based on their lifecycle called
-     * viewModelScope which we can use here.
+     * Uses Kotlin's coroutineScopes to ensure insert is not being run on the main thread.
+     * While one could use GlobalScope to also achieve this outcome, it is advised against this.
+     * (see: https://medium.com/@elizarov/the-reason-to-avoid-globalscope-835337445abc,
+     * https://stackoverflow.com/questions/52581809/how-to-use-coroutines-globalscope-on-the-main-thread),
+     * so we use viewModelScope. viewModelScope also any operations operate only on the lifecycle of
+     * the viewmodel (i.e. end of viewModel = no more background operations).
+     * https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471
      */
     fun insert(meditation: Meditation) = viewModelScope.launch {
         repository.insertMeditation(meditation)

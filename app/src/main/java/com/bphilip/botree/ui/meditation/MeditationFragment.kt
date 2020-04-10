@@ -27,7 +27,6 @@ import org.threeten.bp.format.DateTimeFormatter
 class MeditationFragment : Fragment() {
 
     private lateinit var meditationViewModel: MeditationViewModel
-    private lateinit var mTextViewTimer:TextView
     private lateinit var mButtonStart: ImageButton
     private lateinit var mButtonMinutesUp : ImageButton
     private lateinit var mButtonMinutesDown : ImageButton
@@ -47,19 +46,22 @@ class MeditationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Creates the ViewModel.
         meditationViewModel =
             ViewModelProviders.of(this.activity as FragmentActivity).get(MeditationViewModel::class.java)
         val textView: TextView = view.findViewById(R.id.time_meditation)
 
-        meditationViewModel.text.observe(this, Observer {
-            textView.text = it
+
+        // Whenever the startTimeInMillis is updated, change the timer on the screen.
+        meditationViewModel.startTimeInMillis.observe(this, Observer {
+            textView.text = Utility.timeFormatter(it.toLong(), context as Context)
         })
 
         sharedPref = activity!!.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
         if (meditationViewModel.loadStartTime) {
-            meditationViewModel.startTimeInMillis = sharedPref.getInt(
+            meditationViewModel.startTimeInMillis.value = sharedPref.getInt(
                 getString(R.string.saved_meditation_timer_key),
                 resources.getInteger(R.integer.default_meditation_timer)
             )
@@ -78,23 +80,20 @@ class MeditationFragment : Fragment() {
         // Starts the timer.
         mButtonStart.setOnClickListener {
             with (sharedPref.edit()) {
-                putInt(getString(R.string.saved_meditation_timer_key), meditationViewModel.startTimeInMillis)
+                putInt(getString(R.string.saved_meditation_timer_key), meditationViewModel.startTimeInMillis.value as Int)
                 apply()
             }
             val intent = Intent(activity, Timer::class.java).apply {
-                putExtra(EXTRA_TIMER, meditationViewModel.startTimeInMillis.toLong())
+                putExtra(EXTRA_TIMER, meditationViewModel.startTimeInMillis.value?.toLong())
             }
             Log.i("mVM.startTimeInMillis", meditationViewModel.startTimeInMillis.toString())
             startActivity(intent)
         }
         // Changes the timer on button press.
-        mButtonMinutesUp.setOnClickListener { meditationViewModel.startTimeInMillis += resources.getInteger(R.integer.minutes_increment); timeUpdater() }
-        mButtonMinutesDown.setOnClickListener { meditationViewModel.startTimeInMillis -= resources.getInteger(R.integer.minutes_increment); timeUpdater()  }
-        mButtonSecondsUp.setOnClickListener { meditationViewModel.startTimeInMillis += resources.getInteger(R.integer.seconds_increment); timeUpdater()  }
-        mButtonSecondsDown.setOnClickListener { meditationViewModel.startTimeInMillis -= resources.getInteger(R.integer.seconds_increment); timeUpdater()  }
-
-        // Ensures the time displayed is accurate on view creation - time value from viewmodel.
-        timeUpdater()
+        mButtonMinutesUp.setOnClickListener { increment(resources.getInteger(R.integer.minutes_increment)) }
+        mButtonMinutesDown.setOnClickListener { increment(-resources.getInteger(R.integer.minutes_increment))  }
+        mButtonSecondsUp.setOnClickListener { increment(resources.getInteger(R.integer.seconds_increment)) }
+        mButtonSecondsDown.setOnClickListener { increment(-resources.getInteger(R.integer.seconds_increment))  }
 
         // Find the recyclerView, and adapter.
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_meditation)
@@ -113,9 +112,14 @@ class MeditationFragment : Fragment() {
         var tableRow: TableRow = view.findViewById(R.id.tableRow)
         var tableElement = 0
 
+        // Goes through each of the table columns, and hooks them up their relevant day in the
+        // List of LiveData.
         for (day in meditationViewModel.meditatedOnDay) {
             val currentValue = (tableRow.virtualChildCount - 1) - tableElement
             val tableTextView: TextView = tableRow.getVirtualChildAt(currentValue) as TextView
+
+            // If the count of meditations is greater-than-1, that means the user must have meditated
+            // at least once on that day.
             day.observe(this, Observer {
                 if (it < 1) {
                     tableTextView.setBackgroundResource(R.color.negative)
@@ -125,18 +129,22 @@ class MeditationFragment : Fragment() {
                 }
             })
 
+            // I would hook this up to the LiveData, as there is a possible inconsistent state when
+            // the day ticks, and the LiveData updates but the actual day doesn't. However, we don't
+            // store the date, and doing the minusDays trick doesn't work, as the observer is run
+            // asynchronously, so tableElement will always be the max (5).
             tableTextView.text = LocalDate.now().minusDays(tableElement.toLong()).format(DateTimeFormatter.ofPattern("EEE"))
 
             tableElement += 1
             Log.i("MeditationFragment", tableElement.toString())
         }
 
-        Log.i("MeditatedFragment", "MeditatedToday " + meditationViewModel.meditatedToday.value.toString())
-
+        // Finds the average time.
         val averageTime = view.findViewById<TextView>(R.id.text_average)
 
+        // Hooks it up to the averageMeditation text.
         meditationViewModel.averageMeditation.observe(this, Observer {
-            // Stop crashes on initial startup
+            // Stop crashes on initial startup when there is no value for this.
             if (it == null) {
                 averageTime.text = "00:00"
             }
@@ -144,30 +152,17 @@ class MeditationFragment : Fragment() {
                 averageTime.text = Utility.timeFormatter(it, context as Context)
             }
         })
-
-
-
     }
 
-    private fun timeUpdater() {
-        mTextViewTimer = view?.findViewById(R.id.time_meditation) as TextView
-
-        // Ensure the time can't go below 0.
-        if (meditationViewModel.startTimeInMillis < 0) {
-            meditationViewModel.startTimeInMillis = 0
+    private fun increment(increment: Int) {
+        val currentValue = meditationViewModel.startTimeInMillis.value as Int
+        if ((currentValue + increment) > 0) {
+            meditationViewModel.startTimeInMillis.postValue(
+                meditationViewModel.startTimeInMillis.value?.plus(
+                    increment
+                )
+            )
         }
-
-        // If the passes a threshold, reduce the size of it.
-        if (meditationViewModel.startTimeInMillis >= R.integer.max_default_font_size) {
-            mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 72f)
-        }
-        else if (meditationViewModel.startTimeInMillis < R.integer.max_default_font_size) {
-            mTextViewTimer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 88f)
-        }
-
-        // And then update the visual time.
-        meditationViewModel.text.value = Utility.timeFormatter(meditationViewModel.startTimeInMillis.toLong(), activity as Context)
-
     }
 
 }
