@@ -23,7 +23,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository.
-        val wordsDao = ReflectionRoomDatabase.getDatabase(application, viewModelScope).reflectionDao()
+        val wordsDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
         repository = DataRepository(wordsDao)
         allReflections = repository.allReflections
         changeDates(LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1), LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6))

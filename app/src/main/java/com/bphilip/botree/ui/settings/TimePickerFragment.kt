@@ -1,4 +1,4 @@
-package com.bphilip.botree
+package com.bphilip.botree.ui.settings
 
 import android.app.Activity
 import android.app.Dialog
@@ -11,7 +11,8 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
-import com.bphilip.botree.ui.reflections.NewReflectionActivity
+import com.bphilip.botree.MeditationAlarm
+import com.bphilip.botree.R
 import java.util.*
 
 
@@ -26,7 +27,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         // Get the saved values for the time from SharedPreferences, otherwise have some defaults
         // from the calendar.
         val c = Calendar.getInstance()
-        val hour = sharedPref.getInt(getString(R.string.saved_notification_hour_key), c.get(Calendar.HOUR))
+        val hour = sharedPref.getInt(getString(R.string.saved_notification_hour_key), c.get(Calendar.HOUR_OF_DAY))
         val minute = sharedPref.getInt(getString(R.string.saved_notification_minutes_key), c.get(Calendar.MINUTE))
 
         // Create a new instance of TimePickerDialog and return it

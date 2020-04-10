@@ -7,8 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.threeten.bp.*
 
-// Annotates class to be a Room Database with a table (entity) of the Word class
-@Database(entities = [Reflection::class, Meditation::class], version = 2, exportSchema = false)
+// Annotates to create a database with the two classes, Reflection and Meditation.
+// Don't currently export the schema for migrations.
+@Database(entities = [Reflection::class, Meditation::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ReflectionRoomDatabase : RoomDatabase() {
 
@@ -21,18 +22,20 @@ abstract class ReflectionRoomDatabase : RoomDatabase() {
         private var INSTANCE: ReflectionRoomDatabase? = null
 
         fun getDatabase(
-            context: Context,
-            scope: CoroutineScope
+            context: Context
         ): ReflectionRoomDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }
+            // Keeps it thread-safe (i.e. don't use the database until we've gotten the instance).
             synchronized(this) {
+                // Creates a Room instance of the database.
+                // If the database isn't created, it'll create it for us.
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ReflectionRoomDatabase::class.java,
-                    "word_database"
+                    "meditation_database"
                 )
                     .build()
                 INSTANCE = instance
@@ -41,6 +44,10 @@ abstract class ReflectionRoomDatabase : RoomDatabase() {
         }
     }
 }
+
+/**
+ * Ensures timestamps can be converted to and from a data format SQLite can store.
+ */
 
 class Converters {
     @TypeConverter

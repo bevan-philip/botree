@@ -5,15 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
-import android.widget.Switch
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.preference.*
 import com.bphilip.botree.MeditationAlarm
 import com.bphilip.botree.R
-import com.bphilip.botree.TimePickerFragment
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -23,7 +19,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        val timePicker : TimePickerFragment = TimePickerFragment()
+        val timePicker : TimePickerFragment =
+            TimePickerFragment()
         // Ensures the timePicker returns onActivityResult to this fragment.
         timePicker.setTargetFragment(this, Activity.RESULT_CANCELED)
 
@@ -33,7 +30,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // When the user clicks on the time changer, show the time change prompt.
         findPreference<Preference>(getString(R.string.time_change_key))?.setOnPreferenceClickListener {
-            TimePickerFragment().show(this.fragmentManager as FragmentManager, "timePicker")
+            TimePickerFragment()
+                .show(this.fragmentManager as FragmentManager, "timePicker")
             true
         }
 
