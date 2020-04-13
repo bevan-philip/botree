@@ -5,13 +5,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageButton
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -22,6 +20,7 @@ import com.bphilip.botree.*
 import com.bphilip.botree.ui.timer.Timer
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import kotlin.math.abs
 
 
 class MeditationFragment : Fragment() {
@@ -34,12 +33,46 @@ class MeditationFragment : Fragment() {
     private lateinit var mButtonSecondsDown : ImageButton
     private lateinit var sharedPref : SharedPreferences
 
+    val gesture: GestureDetector = GestureDetector(
+        activity,
+        object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent?): Boolean {
+                return true
+            }
+
+            override fun onFling(
+                e1: MotionEvent, e2: MotionEvent, velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                val SWIPE_MIN_DISTANCE = 120
+                val SWIPE_MAX_OFF_PATH = 250
+                val SWIPE_THRESHOLD_VELOCITY = 200
+                try {
+                    if (abs(e1.y - e2.y) > SWIPE_MAX_OFF_PATH) return false
+                    if (e1.x - e2.x > SWIPE_MIN_DISTANCE
+                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
+                    ) {
+
+                        incrementWeeksBehind(-1)
+                    } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE
+                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
+                    ) {
+                        incrementWeeksBehind(1)
+                    }
+                } catch (e: Exception) {
+                    // nothing
+                }
+                return super.onFling(e1, e2, velocityX, velocityY)
+            }
+        })
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_meditation, container, false)
+
         return root
     }
 
@@ -49,9 +82,8 @@ class MeditationFragment : Fragment() {
         // Creates the ViewModel.
         meditationViewModel =
             ViewModelProviders.of(this.activity as FragmentActivity).get(MeditationViewModel::class.java)
+
         val textView: TextView = view.findViewById(R.id.time_meditation)
-
-
         // Whenever the startTimeInMillis is updated, change the timer on the screen.
         meditationViewModel.startTimeInMillis.observe(this, Observer {
             textView.text = Utility.timeFormatter(it.toLong(), context as Context)
@@ -60,14 +92,14 @@ class MeditationFragment : Fragment() {
         sharedPref = activity!!.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
+        // If we haven't loaded a start time from SharedPreferences already, load it.
         if (meditationViewModel.loadStartTime) {
             meditationViewModel.startTimeInMillis.value = sharedPref.getInt(
                 getString(R.string.saved_meditation_timer_key),
                 resources.getInteger(R.integer.default_meditation_timer)
-            )
+            ).toLong()
             Log.i("MeditationFragment", "Loading startTimeInMillis from SharedPrefs.")
             meditationViewModel.loadStartTime = false
-            Log.i("MeditationFragment", meditationViewModel.loadStartTime.toString())
         }
 
         // Hooks the timer and start buttons.
@@ -80,20 +112,21 @@ class MeditationFragment : Fragment() {
         // Starts the timer.
         mButtonStart.setOnClickListener {
             with (sharedPref.edit()) {
-                putInt(getString(R.string.saved_meditation_timer_key), meditationViewModel.startTimeInMillis.value as Int)
+                putInt(getString(R.string.saved_meditation_timer_key), meditationViewModel.startTimeInMillis.value?.toInt() as Int)
                 apply()
             }
             val intent = Intent(activity, Timer::class.java).apply {
-                putExtra(EXTRA_TIMER, meditationViewModel.startTimeInMillis.value?.toLong())
+                putExtra(EXTRA_TIMER, meditationViewModel.startTimeInMillis.value)
             }
-            Log.i("mVM.startTimeInMillis", meditationViewModel.startTimeInMillis.toString())
+            Log.i("mVM.startTimeInMillis", meditationViewModel.startTimeInMillis.value.toString())
             startActivity(intent)
         }
+
         // Changes the timer on button press.
-        mButtonMinutesUp.setOnClickListener { increment(resources.getInteger(R.integer.minutes_increment)) }
-        mButtonMinutesDown.setOnClickListener { increment(-resources.getInteger(R.integer.minutes_increment))  }
-        mButtonSecondsUp.setOnClickListener { increment(resources.getInteger(R.integer.seconds_increment)) }
-        mButtonSecondsDown.setOnClickListener { increment(-resources.getInteger(R.integer.seconds_increment))  }
+        mButtonMinutesUp.setOnClickListener { incrementStartTime(resources.getInteger(R.integer.minutes_increment).toLong()) }
+        mButtonMinutesDown.setOnClickListener { incrementStartTime(-resources.getInteger(R.integer.minutes_increment).toLong())  }
+        mButtonSecondsUp.setOnClickListener { incrementStartTime(resources.getInteger(R.integer.seconds_increment).toLong()) }
+        mButtonSecondsDown.setOnClickListener { incrementStartTime(-resources.getInteger(R.integer.seconds_increment).toLong())  }
 
         // Find the recyclerView, and adapter.
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_meditation)
@@ -130,13 +163,11 @@ class MeditationFragment : Fragment() {
             })
 
             // I would hook this up to the LiveData, as there is a possible inconsistent state when
-            // the day ticks, and the LiveData updates but the actual day doesn't. However, we don't
-            // store the date, and doing the minusDays trick doesn't work, as the observer is run
-            // asynchronously, so tableElement will always be the max (5).
+            // the day ticks, and the LiveData updates but the actual day doesn't. However, if there's
+            // no day data, we'll have a broken looking ticker, so there's no way to make it work otherwise.
             tableTextView.text = LocalDate.now().minusDays(tableElement.toLong()).format(DateTimeFormatter.ofPattern("EEE"))
 
             tableElement += 1
-            Log.i("MeditationFragment", tableElement.toString())
         }
 
         // Finds the average time.
@@ -152,13 +183,43 @@ class MeditationFragment : Fragment() {
                 averageTime.text = Utility.timeFormatter(it, context as Context)
             }
         })
+
+        val currentWeek = view.findViewById<TextView>(R.id.text_week)
+        meditationViewModel.weeksBehind.observe(this, Observer {
+            currentWeek.text = String.format("%s - %s",
+                Utility.startOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE),
+                Utility.endOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE))
+
+            meditationViewModel.changeDates(Utility.startOfWeek().minusWeeks(it), Utility.endOfWeek().minusWeeks(it))
+        })
+
+
+        val decrementButton: ImageButton = view.findViewById(R.id.button_weeksminusone)
+        decrementButton.setOnClickListener { incrementWeeksBehind(1) }
+        val incrementButton: ImageButton = view.findViewById(R.id.button_weeksplusone)
+        incrementButton.setOnClickListener { incrementWeeksBehind(-1) }
+
+
     }
 
-    private fun increment(increment: Int) {
-        val currentValue = meditationViewModel.startTimeInMillis.value as Int
-        if ((currentValue + increment) > 0) {
+    private fun incrementStartTime(increment: Long) {
+        // Increment the value with the weird method LiveData Ints seem to require it in.
+        // And ensure that the value can never hit below 0.
+        val currentValue = meditationViewModel.startTimeInMillis.value as Long
+        if ((currentValue + increment) >= 0) {
             meditationViewModel.startTimeInMillis.postValue(
                 meditationViewModel.startTimeInMillis.value?.plus(
+                    increment
+                )
+            )
+        }
+    }
+    private fun incrementWeeksBehind(increment: Long) {
+        // Same as incrementStartTime, but changes the weeksBehind variable.
+        val currentValue = meditationViewModel.weeksBehind.value as Long
+        if ((currentValue + increment) >= 0) {
+            meditationViewModel.weeksBehind.postValue(
+                meditationViewModel.weeksBehind.value?.plus(
                     increment
                 )
             )

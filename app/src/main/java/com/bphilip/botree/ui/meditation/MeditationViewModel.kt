@@ -7,6 +7,7 @@ import com.bphilip.botree.Meditation
 import com.bphilip.botree.Utility
 import com.bphilip.botree.ReflectionRoomDatabase
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 
 class MeditationViewModel (application: Application) : AndroidViewModel(application)  {
 
@@ -16,11 +17,14 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     val allMeditations: LiveData<List<Meditation>>
     val averageMeditation: LiveData<Long>
     val meditatedOnDay: List<LiveData<Long>>
-    private val _startTimeInMillis : MutableLiveData<Int> = MutableLiveData<Int>().apply {
-        value = 600000
+
+    val weeksBehind: MutableLiveData<Long> = MutableLiveData<Long>().apply {
+        value = 0
     }
 
-    val startTimeInMillis: MutableLiveData<Int> = _startTimeInMillis
+     val startTimeInMillis : MutableLiveData<Long> = MutableLiveData<Long>().apply {
+        value = 600000
+    }
 
     init {
         // Gets the reflectionsDao, so the repository talks to the right Dao.
@@ -31,17 +35,16 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         allMeditations = repository.allMeditations
         averageMeditation = repository.averageMeditation
         meditatedOnDay = repository.meditatedOnDay
+        changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }
-
-    // Formats the time stored in startTimeInMillis by default.
-    private val _text = MutableLiveData<String>().apply {
-        value = Utility.timeFormatter(startTimeInMillis.value?.toLong() as Long, application.applicationContext)
-    }
-    val text: MutableLiveData<String> = _text
 
     // Whether to load the startTime from SharedPreferences: we only want to load the value on
     // app launch, otherwise we want to save any modifications the user has made.
     var loadStartTime = true
+
+    fun changeDates(start : LocalDate, end : LocalDate) {
+        repository.changeTimeMeditations(start, end)
+    }
 
     /**
      * Uses Kotlin's coroutineScopes to ensure insert is not being run on the main thread.

@@ -1,43 +1,64 @@
 <resources>
+    <!-- App and Section Titles -->
     <string name="app_name">Bo Tree</string>
     <string name="title_meditation">Meditation</string>
     <string name="title_reflections">Reflections</string>
     <string name="title_settings">Settings</string>
     <string name="title_user_guide">User Guide</string>
+    <string name="title_new_reflection">New Reflection</string>
+    <string name="title_post_meditation">Post Meditation</string>
+    <string name="title_timer">Meditation Timer</string>
+
+    <!-- UI Strings -->
     <string name="up_arrow">Up Arrow</string>
     <string name="down_arrow">Down Arrow</string>
     <string name="timer_start">Start the timer</string>
     <string name="timer_pause">Pauses the timer</string>
     <string name="timer_end">Ends the timer</string>
-    <string name="preference_file_key">com.bevan.botree.PREFERENCES</string>
+    <string name="this_weeks_meditations">Details on your meditations this week</string>
+    <string name="average_time_meditated">You have meditated for an average of</string>
+    <string name="post_meditation_message">Well done! You meditated for: </string>
+    <string name="end_session">End session</string>
+    <string name="add_reflection">Take a moment to reflect</string>
+    <string name="hint_reflection">Reflection…</string>
+    <string name="button_save_reflection">Save</string>
+    <string name="reflection_saved">Reflection saved.</string>
+    <string name="reflection_not_saved">Reflection not saved.</string>
+    <string name="time_format">%02d:%02d</string>
+    <string name="next_week">Navigate to the next week</string>
+    <string name="previous_week">Navigate to previous week</string>
+
+    <!-- SharedPreference Strings -->
     <string name="saved_meditation_timer_key">saved_meditation_timer</string>
     <string name="saved_notification_hour_key">saved_notification_hour</string>
     <string name="saved_notification_minutes_key">saved_notification_minutes</string>
     <string name="time_change_key">time_change</string>
-    <string name="notification_enable_key">notification_enable</string>
-    <string name="post_meditation_message">Well done! You meditated for: </string>
-    <string name="add_reflection">Add a reflection</string>
-    <string name="hint_reflection">Reflection…</string>
-    <string name="average_time_meditated">You have meditated for an average of</string>
-    <string name="button_save">Save</string>
-    <string name="not_saved">Reflection not saved.</string>
-    <string name="end_session">End session</string>
-    <string name="saved">Reflection saved.</string>
-    <string name="new_reflection_title">New Reflection</string>
-    <string name="post_meditation_title">Post Meditation</string>
-    <string name="timer_title">Meditation Timer</string>
-    <string name="time_format">%02d:%02d</string>
-    <string name="post_meditation_share_text">I\'ve meditated for %s long today! Join me in using Bo Tree.</string>
-    <string name="next_week">Navigate to the next week</string>
-    <string name="previous_week">Navigate to previous week</string>
+
+    <!-- Default Preference Strings -->
+    <string name="preference_file_key">com.bevan.botree.PREFERENCES</string>
+    <string name="preference_notification_enable_key">notification_enable</string>
     <string name="preference_notification_title">Daily notification</string>
     <string name="preference_notification_description">Enable a daily meditation notification.</string>
     <string name="preference_time_change_title">Notification Time</string>
     <string name="preference_time_change_description">Set when the notification should be displayed.</string>
     <string name="preference_notification_no_time_set">No time selected.</string>
-    <string name="this_weeks_meditations">Details on your meditations this week</string>
+    <string name="preference_user_guide_key">user_guide</string>
+    <string name="preference_user_guide_title">User Guide</string>
+    <string name="preference_user_guide_description">View the User Guide for Bo Tree.</string>
+    <string name="preference_export_meditations_key">export_meditations</string>
+    <string name="preference_export_meditations_title">Export Meditations</string>
+    <string name="preference_export_meditations_description">Export all your meditation data to a CSV.</string>
+    <string name="preference_export_reflections_key">export_reflections</string>
+    <string name="preference_export_reflections_title">Export Reflections</string>
+    <string name="preference_export_reflections_description">Export all your reflection data to a CSV.</string>
+
+    <!-- Notification Strings -->
     <string name="meditation_channel_id">meditation_notification</string>
     <string name="meditation_channel_title">Meditation Notification</string>
     <string name="meditation_notification_title">Meditation Reminder</string>
     <string name="meditation_notification_description">It\'s time to meditate.</string>
+
+    <!-- Share Strings -->
+    <string name="share_post_meditation">I\'ve meditated for %s long today! Join me in using Bo Tree.</string>
+    <string name="share_csv">Choose an app to save your CSV file to</string>
 </resources>
