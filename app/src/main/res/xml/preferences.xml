@@ -7,7 +7,7 @@
         app:title="Notifications">
 
         <SwitchPreferenceCompat
-            app:key="@string/notification_enable_key"
+            app:key="@string/preference_notification_enable_key"
             app:title="@string/preference_notification_title"
             app:summary="@string/preference_notification_description"/>
 
@@ -24,16 +24,35 @@
         app:title="User Guide">
 
         <Preference
-            app:key="user_guide"
-            app:title="User Guide"
-            app:summary="View the user guide for this application">
+            app:key="@string/preference_user_guide_key"
+            app:title="@string/preference_user_guide_title"
+            app:summary="@string/preference_user_guide_description">
             <intent
                 android:targetPackage="com.bphilip.botree"
-                android:targetClass="com.bphilip.botree.UserGuideView"/>
+                android:targetClass="com.bphilip.botree.ui.user_guide.UserGuideView"/>
 
         </Preference>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:key="export"
+        app:title="Export">
+
+        <Preference
+            app:key="@string/preference_export_meditations_key"
+            app:title="@string/preference_export_meditations_title"
+            app:summary="@string/preference_export_meditations_description">
+
+        </Preference>
+
+        <Preference
+            app:key="@string/preference_export_reflections_key"
+            app:title="@string/preference_export_reflections_title"
+            app:summary="@string/preference_export_meditations_description">
+
+        </Preference>
+
+    </PreferenceCategory>
 
 
 </PreferenceScreen>

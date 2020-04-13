@@ -16,11 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.R
 import com.bphilip.botree.Utility
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.WeekFields
-import java.util.*
 import kotlin.math.abs
 
 
@@ -41,7 +37,6 @@ class ReflectionsFragment : Fragment() {
                 e1: MotionEvent, e2: MotionEvent, velocityX: Float,
                 velocityY: Float
             ): Boolean {
-                Log.i("ReflectionsFragment", "onFling has been called!")
                 val SWIPE_MIN_DISTANCE = 120
                 val SWIPE_MAX_OFF_PATH = 250
                 val SWIPE_THRESHOLD_VELOCITY = 200
@@ -64,7 +59,6 @@ class ReflectionsFragment : Fragment() {
             }
         })
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,13 +72,13 @@ class ReflectionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Finds the RecyclerView inside the view.
-        recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview)
+        recyclerView = view.findViewById(R.id.recyclerview)
         val adapter =
             ReflectionListAdapter(activity as Context)
         adapter.notifyDataSetChanged()
         // Connects the RecyclerView Adapter to the RecyclerView.
-        recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = LinearLayoutManager(activity as Context)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(activity as Context)
 
         reflectionsViewModel = ViewModelProviders.of(this.activity as FragmentActivity).get(ReflectionsViewModel::class.java)
         // When the LiveData updates, it updates the adapter.
@@ -99,9 +93,15 @@ class ReflectionsFragment : Fragment() {
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 
-        val textView: TextView = view.findViewById(R.id.textDate)
-        reflectionsViewModel.text.observe(this, Observer {
-            textView.text = it
+        val textDate: TextView = view.findViewById(R.id.textDate)
+
+        reflectionsViewModel.weeksBehind.observe(this, Observer {
+            textDate.text = String.format("%s - %s",
+                Utility.startOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE),
+                Utility.endOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE))
+
+            reflectionsViewModel.changeDates(Utility.startOfWeek().minusWeeks(it), Utility.endOfWeek().minusWeeks(it))
+
         })
 
         val weeksMinusOne = view.findViewById<ImageButton>(R.id.button_weeksminusone)
@@ -112,7 +112,6 @@ class ReflectionsFragment : Fragment() {
 
         recyclerView.setOnTouchListener { v, event ->  gesture.onTouchEvent(event); v.performClick() }
 
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -122,25 +121,17 @@ class ReflectionsFragment : Fragment() {
 
     }
 
-    private fun changeTime(weekChange : Long) {
-        reflectionsViewModel.weeksBehind += weekChange
-
-        // Can't store data in the future (from the current date), so no point allowing it.
-        if (reflectionsViewModel.weeksBehind < 0) {
-            reflectionsViewModel.weeksBehind = 0
+    private fun changeTime(increment: Long) {
+        // Increment the value with the weird method LiveData Ints seem to require it in.
+        // And ensure that the value can never hit below 0.
+        val currentValue = reflectionsViewModel.weeksBehind.value as Long
+        if ((currentValue + increment) >= 0) {
+            reflectionsViewModel.weeksBehind.postValue(
+                reflectionsViewModel.weeksBehind.value?.plus(
+                    increment
+                )
+            )
         }
-
-        // Finds the start and end dates of the week.
-        val startDate = LocalDate.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1)
-        val endDate = LocalDate.now().minusWeeks(reflectionsViewModel.weeksBehind).with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6)
-
-        // Updates the text at the top of the screen.
-        reflectionsViewModel.text.value = String.format("%s - %s", startDate.format(DateTimeFormatter.ISO_DATE), endDate.format(DateTimeFormatter.ISO_DATE))
-
-        // Changes the LiveData query.
-        reflectionsViewModel.changeDates(startDate, endDate)
-        
-
     }
 
 

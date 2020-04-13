@@ -77,7 +77,7 @@ class PostMeditation : AppCompatActivity() {
         val sharingIntent: Intent = Intent(Intent.ACTION_SEND)
             .setType("text/plain")
             .putExtra(Intent.EXTRA_SUBJECT, "\n\n")
-            .putExtra(Intent.EXTRA_TEXT, getString(R.string.post_meditation_share_text, postMeditationViewModel.text.value))
+            .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_post_meditation, postMeditationViewModel.text.value))
 
         shareActionProvider.setShareIntent(sharingIntent)
 

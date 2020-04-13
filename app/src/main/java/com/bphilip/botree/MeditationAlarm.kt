@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
 import androidx.core.app.AlarmManagerCompat
 import androidx.preference.PreferenceManager
@@ -34,7 +33,7 @@ class MeditationAlarm {
         val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         // If notifications are enabled, we'll configure it.
-        if (defaultSharedPreferences.getBoolean(context.getString(R.string.notification_enable_key), false)) {
+        if (defaultSharedPreferences.getBoolean(context.getString(R.string.preference_notification_enable_key), false)) {
             val calendar: Calendar = Calendar.getInstance()
             // Ensures the Calendar has most of the date elements already created.
             calendar.timeInMillis = System.currentTimeMillis()

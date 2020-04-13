@@ -35,6 +35,7 @@ class UserGuideView : AppCompatActivity() {
             R.anim.nav_default_pop_enter_anim,
             R.anim.nav_default_pop_exit_anim
         )
+        finish()
     }
 
 
