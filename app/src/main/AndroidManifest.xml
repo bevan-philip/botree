@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,7 @@
         </activity>
         <activity
             android:name=".ui.reflections.NewReflectionActivity"
-            android:label="@string/new_reflection_title"
+            android:label="@string/title_new_reflection"
             android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -35,7 +36,7 @@
         <activity
             android:name=".ui.post_meditation.PostMeditation"
             android:allowTaskReparenting="true"
-            android:label="@string/post_meditation_title"
+            android:label="@string/title_post_meditation"
             android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -45,7 +46,7 @@
         </activity>
         <activity
             android:name=".ui.timer.Timer"
-            android:label="@string/timer_title"
+            android:label="@string/title_timer"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
 
@@ -67,7 +68,18 @@
         <receiver
             android:name=".AlarmBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.bphilip.botree.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
     </application>
 
 </manifest>

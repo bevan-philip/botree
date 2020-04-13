@@ -29,7 +29,7 @@ class ReflectionListAdapter internal constructor(
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         val current = reflections[position]
-        holder.titleItemView.text = current.word
+        holder.titleItemView.text = current.reflection
         holder.dateItemView.text = String.format("%s | %s",
             current.date?.format(DateTimeFormatter.ofPattern("EEEE")),
             current.date?.format(DateTimeFormatter.ofPattern("HH:mm")))
