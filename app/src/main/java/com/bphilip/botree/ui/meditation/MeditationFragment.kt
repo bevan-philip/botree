@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
-import android.widget.RelativeLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -76,12 +75,12 @@ class MeditationFragment : Fragment() {
         // Couldn't quite get touch right... whenever the RecyclerView has items, the rest of the view
         // seems to have it's touch sensitivity reduce significantly... this is the best working
         // compromise.
-        root.setOnTouchListener { v, event ->
+        root.setOnTouchListener { v, _ ->
             v.findViewById<ConstraintLayout>(R.id.bottomConstraintLayout).setOnTouchListener {
-                    v, event ->  gesture.onTouchEvent(event); v.performClick()
+                    v_bcl, event_bcl ->  gesture.onTouchEvent(event_bcl); v_bcl.performClick()
             }
             v.findViewById<RecyclerView>(R.id.recyclerview_meditation).setOnTouchListener {
-                    v, event ->  gesture.onTouchEvent(event); v.performClick()
+                    v_rvm, event_rvm ->  gesture.onTouchEvent(event_rvm); v_rvm.performClick()
             }
             true
         }
@@ -198,10 +197,9 @@ class MeditationFragment : Fragment() {
             }
         })
 
-        // Change the current week displayed whenever the weeksBehind value is
-        // changed.
+        // Change the current month displayed whenever the weeksBehind value is changed.
         val currentWeek = view.findViewById<TextView>(R.id.text_week)
-        meditationViewModel.weeksBehind.observe(this, Observer {
+        meditationViewModel.monthsBehind.observe(this, Observer {
             currentWeek.text = String.format("%s %s",
                 Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("LLLL")),
                 Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("uuuu"))
@@ -213,9 +211,10 @@ class MeditationFragment : Fragment() {
             )
         })
 
-        val decrementButton: ImageButton = view.findViewById(R.id.button_weeksminusone)
+        // Change the months.
+        val decrementButton: ImageButton = view.findViewById(R.id.button_monthsminusone)
         decrementButton.setOnClickListener { incrementWeeksBehind(1) }
-        val incrementButton: ImageButton = view.findViewById(R.id.button_weeksplusone)
+        val incrementButton: ImageButton = view.findViewById(R.id.button_monthsplusone)
         incrementButton.setOnClickListener { incrementWeeksBehind(-1) }
 
     }
@@ -234,10 +233,10 @@ class MeditationFragment : Fragment() {
     }
     private fun incrementWeeksBehind(increment: Long) {
         // Same as incrementStartTime, but changes the weeksBehind variable.
-        val currentValue = meditationViewModel.weeksBehind.value as Long
+        val currentValue = meditationViewModel.monthsBehind.value as Long
         if ((currentValue + increment) >= 0) {
-            meditationViewModel.weeksBehind.postValue(
-                meditationViewModel.weeksBehind.value?.plus(
+            meditationViewModel.monthsBehind.postValue(
+                meditationViewModel.monthsBehind.value?.plus(
                     increment
                 )
             )
