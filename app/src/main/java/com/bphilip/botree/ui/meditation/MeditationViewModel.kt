@@ -35,7 +35,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         allMeditations = repository.allMeditations
         averageMeditation = repository.averageMeditation
         meditatedOnDay = repository.meditatedOnDay
-        changeDates(Utility.startOfWeek(), Utility.endOfWeek())
+        changeDates(Utility.startOfMonth(0), Utility.endOfMonth(0))
     }
 
     // Whether to load the startTime from SharedPreferences: we only want to load the value on

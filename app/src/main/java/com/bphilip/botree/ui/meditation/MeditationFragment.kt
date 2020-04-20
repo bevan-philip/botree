@@ -202,14 +202,14 @@ class MeditationFragment : Fragment() {
         // changed.
         val currentWeek = view.findViewById<TextView>(R.id.text_week)
         meditationViewModel.weeksBehind.observe(this, Observer {
-            currentWeek.text = String.format("%s - %s",
-                Utility.startOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE),
-                Utility.endOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE)
+            currentWeek.text = String.format("%s %s",
+                Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("LLLL")),
+                Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("uuuu"))
             )
 
             meditationViewModel.changeDates(
-                Utility.startOfWeek().minusWeeks(it),
-                Utility.endOfWeek().minusWeeks(it)
+                Utility.startOfMonth(it),
+                Utility.endOfMonth(it)
             )
         })
 
