@@ -18,7 +18,6 @@ import com.bphilip.botree.ui.reflections.ReflectionsViewModel
 class PostMeditation : AppCompatActivity() {
 
     private lateinit var postMeditationViewModel: PostMeditationViewModel
-    private lateinit var reflectionsViewModel: ReflectionsViewModel
     private val newWordActivityRequestCode = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +28,8 @@ class PostMeditation : AppCompatActivity() {
         postMeditationViewModel =
             ViewModelProviders.of(this).get(PostMeditationViewModel::class.java)
 
-        reflectionsViewModel = ViewModelProviders.of(this).get(ReflectionsViewModel::class.java)
-
+        // Change the textView.
         val textView: TextView = findViewById(R.id.time_meditated_for)
-
         postMeditationViewModel.text.observe(this, Observer {
             textView.text = it
         })
@@ -42,14 +39,16 @@ class PostMeditation : AppCompatActivity() {
             postMeditationViewModel.pullValue = false
         }
 
+        // Update the PostMeditation Text to be whatever the user has meditated for.
         postMeditationViewModel.text.value =
             Utility.timeFormatter(postMeditationViewModel.meditatedFor, applicationContext)
 
-        var endSessionButton : Button = findViewById(R.id.button_end_session)
+        val endSessionButton : Button = findViewById(R.id.button_end_session)
         endSessionButton.setOnClickListener { onSupportNavigateUp() }
 
-        var newReflectionButton : Button = findViewById(R.id.button_add_reflection)
+        val newReflectionButton : Button = findViewById(R.id.button_add_reflection)
         newReflectionButton.setOnClickListener {
+            // Start the new meditation view.
             val intent = Intent(applicationContext, NewReflectionActivity::class.java)
             startActivityForResult(intent, newWordActivityRequestCode)
         }
@@ -58,6 +57,10 @@ class PostMeditation : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        // Only need reflectionsViewModel for storing reflections that return to the PostMeditation
+        // screen.
+        val reflectionsViewModel = ViewModelProviders.of(this).get(ReflectionsViewModel::class.java)
 
         Utility.createReflectionFromIntent(
             requestCode,
@@ -69,11 +72,15 @@ class PostMeditation : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        /**
+         * Create the sharing menu.
+         */
         menuInflater.inflate(R.menu.menu_post_meditation, menu)
 
         val shareItem: MenuItem = menu.findItem(R.id.action_share)
         val shareActionProvider: ShareActionProvider = MenuItemCompat.getActionProvider(shareItem) as ShareActionProvider
 
+        // Create the sharing intent.
         val sharingIntent: Intent = Intent(Intent.ACTION_SEND)
             .setType("text/plain")
             .putExtra(Intent.EXTRA_SUBJECT, "\n\n")

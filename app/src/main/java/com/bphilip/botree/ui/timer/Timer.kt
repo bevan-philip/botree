@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bphilip.botree.EXTRA_TIMER
 import com.bphilip.botree.Meditation
@@ -23,98 +24,99 @@ import kotlin.math.roundToInt
 
 class Timer : AppCompatActivity() {
 
-    private var startTimeInMillis:Long = 600000
-    private var mTimeLeftInMillis:Long = startTimeInMillis
-    private lateinit var mProgressCountDown : ProgressBar
-    private lateinit var mTextViewTimer:TextView
-
-    private var mCountDownStarted = true
-
+    // CountDownTimer instance.
     private lateinit var mCountDownTimer: CountDownTimer
+    // Start/Pause button. Needs to be changeable by different functions.
     private lateinit var mPauseButton : ImageButton
-    private lateinit var mStopButton : ImageButton
-
-    private lateinit var meditationViewModel : MeditationViewModel
-
+    private lateinit var timerViewModel: TimerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timer)
 
-        startTimeInMillis = intent.getLongExtra(EXTRA_TIMER, 600000)
-        mTimeLeftInMillis = startTimeInMillis
+        timerViewModel = ViewModelProviders.of(this).get(TimerViewModel::class.java)
 
-        findViewById<TextView>(R.id.countdown_timer).apply {
-            text = Utility.timeFormatter(startTimeInMillis, context)
+        // If we haven't already pulled the value from the intent, pull it.
+        if (timerViewModel.pullValue) {
+            timerViewModel.pullValue = false
+            timerViewModel.startTimeInMillis.value = intent.getLongExtra(EXTRA_TIMER, 600000)
+            timerViewModel.mTimeLeftInMillis.value = timerViewModel.startTimeInMillis.value
         }
 
-        mProgressCountDown = findViewById(R.id.progress_countdown)
+        val countDownTimer: TextView = findViewById(R.id.countdown_timer)
+        val mProgressCountDown: ProgressBar = findViewById(R.id.progress_countdown)
+        // Whenever the time left changes, change the progress and the text.
+        timerViewModel.mTimeLeftInMillis.observe(this, Observer {
+            countDownTimer.text = Utility.timeFormatter(it + 1000, applicationContext )
+            mProgressCountDown.progress =
+                ((it.toFloat() / timerViewModel.startTimeInMillis.value?.toFloat() as Float)*100).roundToInt()
+        })
+
+        // Start or Pause the timer, depending on the current state.
         mPauseButton = findViewById(R.id.pause_button)
         mPauseButton.setOnClickListener {
-            if (mCountDownStarted) pauseTimer() else startTimer()
+            if (timerViewModel.mCountDownStarted) pauseTimer() else startTimer()
         }
 
-        mStopButton = findViewById(R.id.stop_button)
-        mStopButton.setOnClickListener { v -> finishMeditation(v, startTimeInMillis - mTimeLeftInMillis) }
+        // Stop the timer, but still keep the duration meditated.
+        val mStopButton: ImageButton = findViewById(R.id.stop_button)
+        mStopButton.setOnClickListener { v -> finishMeditation(v,
+            timerViewModel.startTimeInMillis.value as Long - timerViewModel.mTimeLeftInMillis.value as Long)
+        }
 
-        mProgressCountDown.progress = 100
-
-        meditationViewModel =
-            ViewModelProviders.of(this).get(MeditationViewModel::class.java)
+        // Start the timer.
         startTimer()
 
     }
 
     fun startTimer() {
-        mTextViewTimer = findViewById(R.id.countdown_timer)
+        // Change the button to indicate what the button will do at that moment in time.
         mPauseButton.setImageResource(R.drawable.ic_pause)
 
-        mCountDownTimer = object : CountDownTimer(mTimeLeftInMillis, 1000) {
+        mCountDownTimer = object : CountDownTimer(
+                timerViewModel.mTimeLeftInMillis.value as Long,
+                1000)
+        {
             override fun onTick(millisUntilFinished: Long) {
-                mTextViewTimer.text =
-                    Utility.timeFormatter(millisUntilFinished + 1000, applicationContext)
                 Log.v("CountDown", millisUntilFinished.toString())
-                Log.v("Progress", ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).toString())
-                mProgressCountDown.progress =
-                    ((millisUntilFinished.toFloat() / startTimeInMillis.toFloat())*100).roundToInt()
-                mTimeLeftInMillis = millisUntilFinished
+                timerViewModel.mTimeLeftInMillis.postValue(millisUntilFinished)
             }
 
             override fun onFinish() {
-                mTextViewTimer.text = "00:00"
-                mProgressCountDown.progress = 0
-                finishMeditation(findViewById(R.id.progress_countdown), startTimeInMillis)
+                // We add one second to the time left to make it match with the progress bar, so we
+                // subtract one to ensure it displays 00:00 at the end.
+                timerViewModel.mTimeLeftInMillis.postValue(-1000)
+                finishMeditation(findViewById(R.id.progress_countdown), timerViewModel.startTimeInMillis.value as Long)
             }
         }.start()
 
-        mCountDownStarted = true
+        timerViewModel.mCountDownStarted = true
 
     }
 
     private fun pauseTimer() {
+        // Cancel the timer. We can simply restart the timer as we've stored the timeLeft.
         mCountDownTimer.cancel()
-        mCountDownStarted = false
+        timerViewModel.mCountDownStarted = false
         mPauseButton.setImageResource(R.drawable.ic_play_arrow)
-    }
-
-
-
-    private fun destroyTimer() {
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel()
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        destroyTimer()
+        // Ensure CountDownTimer does not remain active in background.
+        mCountDownTimer.cancel()
     }
 
     fun finishMeditation(view: View, duration : Long) {
+        // Create the intent that starts the PostMeditation screen.
         val intent = Intent(this, PostMeditation::class.java).apply {
             putExtra(EXTRA_TIMER, duration)
         }
+
+        // Store the meditation.
+        val meditationViewModel =
+            ViewModelProviders.of(this).get(MeditationViewModel::class.java)
 
         meditationViewModel.insert(
             Meditation(
@@ -123,11 +125,15 @@ class Timer : AppCompatActivity() {
                 LocalDate.now()
             )
         )
-        
+
+        // Play some audio.
+        // Rely on the fact that the audio is relatively small, so will automatically stop.
         val mp: MediaPlayer? = MediaPlayer.create(view.context, R.raw.bell)
         mp?.start()
 
+        // Start the activity with the intent.
         startActivity(intent)
+        // And ensure completion.
         finish()
     }
 }
