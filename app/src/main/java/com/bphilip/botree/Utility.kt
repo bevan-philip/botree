@@ -77,22 +77,4 @@ object Utility {
     fun endOfWeek(): LocalDate {
         return LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1).plusDays(6)
     }
-
-    /**
-     * startOfMonth()
-     * Return the start of the month for how many X months behind.
-     * X months is used directly in the function vs startOfWeek() as while weeks are a static length,
-     * months aren't.
-     */
-    fun startOfMonth(monthsBehind: Long): LocalDate {
-        return YearMonth.now().minusMonths(monthsBehind).atDay(1)
-    }
-
-    /**
-     * endOfMonth()
-     * Return the start of the month for how many X months behind
-     */
-    fun endOfMonth(monthsBehind: Long): LocalDate {
-        return YearMonth.now().minusMonths(monthsBehind).atEndOfMonth()
-    }
 }

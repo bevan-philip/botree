@@ -1,4 +1,4 @@
-package com.bphilip.botree.ui.meditation
+package com.bphilip.botree.ui.settings
 
 import android.app.Application
 import androidx.lifecycle.*

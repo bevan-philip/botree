@@ -199,18 +199,17 @@ class MeditationFragment : Fragment() {
 
         // Change the current month displayed whenever the weeksBehind value is changed.
         val currentWeek = view.findViewById<TextView>(R.id.text_week)
-        meditationViewModel.monthsBehind.observe(this, Observer {
-            currentWeek.text = String.format("%s %s",
-                Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("LLLL")),
-                Utility.startOfMonth(it).format(DateTimeFormatter.ofPattern("uuuu"))
+        meditationViewModel.weeksBehind.observe(this, Observer {
+            currentWeek.text = String.format("%s - %s",
+                Utility.startOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE),
+                Utility.endOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE)
             )
 
             meditationViewModel.changeDates(
-                Utility.startOfMonth(it),
-                Utility.endOfMonth(it)
+                Utility.startOfWeek().minusWeeks(it),
+                Utility.endOfWeek().minusWeeks(it)
             )
         })
-
         // Change the months.
         val decrementButton: ImageButton = view.findViewById(R.id.button_monthsminusone)
         decrementButton.setOnClickListener { incrementWeeksBehind(1) }
@@ -233,10 +232,10 @@ class MeditationFragment : Fragment() {
     }
     private fun incrementWeeksBehind(increment: Long) {
         // Same as incrementStartTime, but changes the weeksBehind variable.
-        val currentValue = meditationViewModel.monthsBehind.value as Long
+        val currentValue = meditationViewModel.weeksBehind.value as Long
         if ((currentValue + increment) >= 0) {
-            meditationViewModel.monthsBehind.postValue(
-                meditationViewModel.monthsBehind.value?.plus(
+            meditationViewModel.weeksBehind.postValue(
+                meditationViewModel.weeksBehind.value?.plus(
                     increment
                 )
             )
