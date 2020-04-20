@@ -7,8 +7,8 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel (application: Application) : AndroidViewModel(application) {
 
-    lateinit var allMeditations : List<Meditation>
-    lateinit var alLReflections : List<Reflection>
+    lateinit var allMeditations : List<Exportable>
+    lateinit var alLReflections : List<Exportable>
 
     var reflectionDao: ReflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
 
