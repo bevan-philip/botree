@@ -17,9 +17,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.bphilip.botree.Exportable
 import com.bphilip.botree.MeditationAlarm
 import com.bphilip.botree.R
-import com.bphilip.botree.ui.settings.SettingsViewModel
 import java.io.File
 import java.io.FileWriter
 
@@ -82,7 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
             }
             else {
-                writeCSV(isReflection = true, isMeditation = false, fileName = "reflections.csv")
+                writeCSV(settingsViewModel.alLReflections, "reflections.csv")
             }
             true
         }
@@ -97,7 +97,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             }
             else {
-                writeCSV(isReflection = false, isMeditation = true, fileName = "meditations.csv")
+                writeCSV(settingsViewModel.allMeditations, "meditations.csv")
 
             }
             true
@@ -143,27 +143,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)))
     }
 
-    private fun writeCSV(isReflection: Boolean, isMeditation: Boolean, fileName: String) {
+    /**
+     * writeCSV(isReflection: Boolean, isMeditation: Boolean, fileName: String)
+     * Writes the CSV to a file.
+     */
+    private fun writeCSV(thingToWrite: List<Exportable>, fileName: String) {
+        // Finds the internal path.
         var path = context?.getExternalFilesDir(null)?.absolutePath as String + "/csv"
         File(path).mkdirs()
 
         path += "/$fileName"
         val fileWriter = FileWriter(path)
 
-        // There's no smarter way to do this that I can think of (I tried to pass the object, and
-        // then both of them calling .asCSV(), but couldn't get it working.
-        if (isReflection) {
-            fileWriter.append("id, reflection, date\n")
-            for (reflection in settingsViewModel.alLReflections) {
-                fileWriter.append(reflection.asCSV())
+        // Writes all the records to file, ensuring that the file has a header.
+        var header = true
+        for (record in thingToWrite) {
+            if (header) {
+                fileWriter.append(record.headerExport(record))
+                header = false
             }
-        }
-
-        if (isMeditation) {
-            fileWriter.append("id, duration, date\n")
-            for (meditation in settingsViewModel.allMeditations) {
-                fileWriter.append(meditation.asCSV())
-            }
+            fileWriter.append(record.asCSV(record))
         }
 
         // Ensure the file has been properly closed.
@@ -175,6 +174,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         shareCSV(path)
     }
 
+    /**
+     * onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray)
+     * Whenever we get the result of the permission request, try to save the CSV (if it is a success).
+     */
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
 
@@ -184,14 +187,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
             reflectionPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(isReflection = true, isMeditation = false, fileName = "reflections.csv")
+                    writeCSV(settingsViewModel.alLReflections, "reflections.csv")
                 }
                 return
             }
             meditationPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(isReflection = false, isMeditation = true, fileName = "meditations.csv")
+                    writeCSV(settingsViewModel.allMeditations, "meditations.csv")
                 }
                 return
             }

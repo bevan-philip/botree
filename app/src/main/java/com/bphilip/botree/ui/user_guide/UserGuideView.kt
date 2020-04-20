@@ -6,7 +6,7 @@ import android.webkit.WebView
 import com.bphilip.botree.R
 
 /**
- * Creates the user view.
+ * Creates the user guide view. Not much to explain here.
  */
 
 class UserGuideView : AppCompatActivity() {
