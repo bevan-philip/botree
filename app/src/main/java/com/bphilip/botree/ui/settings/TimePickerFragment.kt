@@ -42,6 +42,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
             apply()
         }
 
+        // Ensure the alarm is set.
         MeditationAlarm().startAlarmBroadcastReceiver(context as Context)
 
     }

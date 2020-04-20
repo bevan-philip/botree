@@ -18,7 +18,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     val averageMeditation: LiveData<Long>
     val meditatedOnDay: List<LiveData<Long>>
 
-    val monthsBehind: MutableLiveData<Long> = MutableLiveData<Long>().apply {
+    val weeksBehind: MutableLiveData<Long> = MutableLiveData<Long>().apply {
         value = 0
     }
 
@@ -35,7 +35,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         allMeditations = repository.allMeditations
         averageMeditation = repository.averageMeditation
         meditatedOnDay = repository.meditatedOnDay
-        changeDates(Utility.startOfMonth(0), Utility.endOfMonth(0))
+        changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }
 
     // Whether to load the startTime from SharedPreferences: we only want to load the value on

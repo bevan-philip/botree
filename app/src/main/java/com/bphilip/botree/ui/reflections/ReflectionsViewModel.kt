@@ -31,7 +31,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }
 
-    // Explanatin can be found in MeditationViewModel.
+    // Explanation can be found in MeditationViewModel.
     fun insert(reflection: Reflection) = viewModelScope.launch {
         repository.insertReflection(reflection)
     }

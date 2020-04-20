@@ -19,7 +19,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.bphilip.botree.MeditationAlarm
 import com.bphilip.botree.R
-import com.bphilip.botree.ui.meditation.SettingsViewModel
+import com.bphilip.botree.ui.settings.SettingsViewModel
 import java.io.File
 import java.io.FileWriter
 
@@ -48,7 +48,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // When the user clicks on the time changer, show the time change prompt.
         findPreference<Preference>(getString(R.string.time_change_key))?.setOnPreferenceClickListener {
-            TimePickerFragment()    .show(this.fragmentManager as FragmentManager, "timePicker")
+            TimePickerFragment().show(this.fragmentManager as FragmentManager, "timePicker")
             true
         }
 
@@ -66,6 +66,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+
+        /**
+         * Export functions.
+         * They first check that the permissions exist, and if so, export the CSV of said category
+         * to a CSV, and creates a share prompt.
+         */
         findPreference<Preference>(getString(R.string.preference_export_reflections_key))?.setOnPreferenceClickListener {
             if (ContextCompat.checkSelfPermission(
                     context as Context,
@@ -114,19 +120,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    /**
+     * shareCSV()
+     * Creates the share prompt, and shares the file.
+     */
     private fun shareCSV(path: String) {
+        // Creates the URI from the File Provider, so that other applications can access the file.
         val uri = FileProvider.getUriForFile(
             context!!,
             "com.bphilip.botree.fileprovider",
             File(path)
         )
 
+        // Creates the share prompt.
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
             type = "text/csv"
         }
 
+        // Starts the default Android share prompt.
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)))
     }
 
@@ -137,6 +150,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         path += "/$fileName"
         val fileWriter = FileWriter(path)
 
+        // There's no smarter way to do this that I can think of (I tried to pass the object, and
+        // then both of them calling .asCSV(), but couldn't get it working.
         if (isReflection) {
             fileWriter.append("id, reflection, date\n")
             for (reflection in settingsViewModel.alLReflections) {
@@ -151,10 +166,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        // Ensure the file has been properly closed.
         fileWriter.flush()
         fileWriter.close()
 
         Log.i("SettingsFragment", "Written CSV.")
+        // Tries to share the CSV.
         shareCSV(path)
     }
 
