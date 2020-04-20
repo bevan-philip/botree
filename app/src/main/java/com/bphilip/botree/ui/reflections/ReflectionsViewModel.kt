@@ -31,6 +31,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }
 
+    // Explanatin can be found in MeditationViewModel.
     fun insert(reflection: Reflection) = viewModelScope.launch {
         repository.insertReflection(reflection)
     }
@@ -41,7 +42,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
     }
 
     private val _text = MutableLiveData<String>().apply {
-
+        // Sets the initial text, just in case.
         value = String.format("%s - %s", Utility.startOfWeek().format(
             DateTimeFormatter.ISO_DATE), Utility.endOfWeek().format(
             DateTimeFormatter.ISO_DATE))

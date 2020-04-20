@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jakewharton.threetenabp.AndroidThreeTen
 
+// Used for timer responses by ViewModels.
 const val EXTRA_TIMER = "com.bphilip.botree.TIMER"
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         // Initialise the ThreeTen Backport library.
         // This backports the Java8+ time library to lower version.
+        // Using this because the time library got significantly improved in Java8.
         AndroidThreeTen.init(this)
 
     }

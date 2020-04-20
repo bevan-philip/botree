@@ -41,7 +41,7 @@
         tools:text="2020-04-02 - 2020-04-02" />
 
     <ImageButton
-        android:id="@+id/button_weeksminusone"
+        android:id="@+id/button_monthsminusone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background_inverse"
@@ -52,7 +52,7 @@
         app:srcCompat="@drawable/ic_keyboard_arrow_left" />
 
     <ImageButton
-        android:id="@+id/button_weeksplusone"
+        android:id="@+id/button_monthsplusone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background_inverse"

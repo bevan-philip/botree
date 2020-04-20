@@ -23,11 +23,13 @@ class ReflectionListAdapter internal constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
+        // Create the reflections RecylerView layout.
         val itemView = inflater.inflate(R.layout.recyclerview_reflections, parent, false)
         return WordViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
+        // Setup the date and reflection text.
         val current = reflections[position]
         holder.titleItemView.text = current.reflection
         holder.dateItemView.text = String.format("%s | %s",
@@ -36,6 +38,7 @@ class ReflectionListAdapter internal constructor(
     }
 
     internal fun setWords(reflections: List<Reflection>) {
+        // Whenever a new reflection is added, update it.
         this.reflections = reflections
         notifyDataSetChanged()
     }

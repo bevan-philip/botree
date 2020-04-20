@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
@@ -28,7 +27,7 @@ import java.io.FileWriter
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var sharedPreferences: SharedPreferences
-    private val REQUEST_GET_TIME = 1
+    private val requestGetTime = 1
     private val reflectionPermissionRequestCode = 1
     private val meditationPermissionRequestCode = 2
     private lateinit var settingsViewModel: SettingsViewModel
@@ -105,7 +104,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // If the user hasn't setup a time, then we have no indication of when to deliver the
         // the notification, so we disable it.
         if (resultCode == Activity.RESULT_CANCELED) {
-            if (requestCode == REQUEST_GET_TIME) {
+            if (requestCode == requestGetTime) {
                 if (!sharedPreferences.contains(getString(R.string.saved_notification_hour_key))) {
                     findPreference<SwitchPreferenceCompat>(getString(R.string.preference_notification_enable_key))?.isChecked =
                         false

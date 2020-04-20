@@ -18,7 +18,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     val averageMeditation: LiveData<Long>
     val meditatedOnDay: List<LiveData<Long>>
 
-    val weeksBehind: MutableLiveData<Long> = MutableLiveData<Long>().apply {
+    val monthsBehind: MutableLiveData<Long> = MutableLiveData<Long>().apply {
         value = 0
     }
 
@@ -42,6 +42,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     // app launch, otherwise we want to save any modifications the user has made.
     var loadStartTime = true
 
+    // Change the dates for what meditations are displayed.
     fun changeDates(start : LocalDate, end : LocalDate) {
         repository.changeTimeMeditations(start, end)
     }

@@ -17,8 +17,9 @@ class NewReflectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
         setContentView(R.layout.activity_new_word)
-        editWordView = findViewById(R.id.edit_word)
 
+        editWordView = findViewById(R.id.edit_word)
+        // Return the meditation to the calling activity, which can handle saving it.
         val button = findViewById<Button>(R.id.button_save)
         button.setOnClickListener {
             val replyIntent = Intent()

@@ -3,7 +3,6 @@ package com.bphilip.botree.ui.reflections
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.TextView
@@ -95,6 +94,7 @@ class ReflectionsFragment : Fragment() {
 
         val textDate: TextView = view.findViewById(R.id.textDate)
 
+        // Change the weeks displayed when weeksBehind changes.
         reflectionsViewModel.weeksBehind.observe(this, Observer {
             textDate.text = String.format("%s - %s",
                 Utility.startOfWeek().minusWeeks(it).format(DateTimeFormatter.ISO_DATE),
@@ -104,10 +104,11 @@ class ReflectionsFragment : Fragment() {
 
         })
 
-        val weeksMinusOne = view.findViewById<ImageButton>(R.id.button_weeksminusone)
+        // Change the weeksBehind value.
+        val weeksMinusOne = view.findViewById<ImageButton>(R.id.button_monthsminusone)
         weeksMinusOne.setOnClickListener { changeTime(1) }
 
-        val weeksPlusOne = view.findViewById<ImageButton>(R.id.button_weeksplusone)
+        val weeksPlusOne = view.findViewById<ImageButton>(R.id.button_monthsplusone)
         weeksPlusOne.setOnClickListener { changeTime(-1) }
 
         recyclerView.setOnTouchListener { v, event ->  gesture.onTouchEvent(event); v.performClick() }
