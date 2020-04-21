@@ -14,12 +14,12 @@ import java.util.*
 class MeditationAlarm {
     fun startAlarmBroadcastReceiver(context: Context) {
         // Creates the intent to send to AlarmBroadcastReceiver.
-        val _intent: Intent = Intent(context, AlarmBroadcastReceiver::class.java)
+        val intent: Intent = Intent(context, AlarmBroadcastReceiver::class.java)
         // Creates the PendingIntent, and ensures it updates any existing PendingIntent.
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(
             context,
             0,
-            _intent,
+            intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 

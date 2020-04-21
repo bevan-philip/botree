@@ -1,5 +1,5 @@
 html, body {
-    background: #00BCD4;
+    background: #006064;
     color: #ffffff;
     font-family: "Roboto";
 }
@@ -7,11 +7,24 @@ html, body {
 .container img {
     margin: 0 auto;
     display: flex;
+    max-width: 100%;
+}
+
+a, a:visited {
+    color: #00BCD4;
+}
+
+a:hover, a:active {
+    color: #FFFFFF;
 }
 
 @media (min-width: 600px) {
     .container {
         width: 70%;
         margin: 0 auto;
+    }
+
+    .container img {
+        max-width: 40%;
     }
 }

@@ -12,7 +12,7 @@ import org.threeten.bp.*
  */
 sealed class Exportable {
     // Exports a record as a CSV.
-    fun asCSV(exportable: Exportable) : String {
+    fun csvBody(exportable: Exportable) : String {
         return when (exportable) {
             is Reflection -> String.format("%s, %s, %s\n",
                 exportable.id.toString(),
@@ -28,7 +28,7 @@ sealed class Exportable {
     }
 
     // Exports the header for a record type.
-    fun headerExport(exportable: Exportable): String {
+    fun csvHeader(exportable: Exportable): String {
         return when (exportable) {
             is Reflection -> "id, reflection, date\n"
             is Meditation -> "id, duration, date\n"
