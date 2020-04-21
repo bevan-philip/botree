@@ -52,7 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        // When the user clicks on the notifcation enable, run the broadcast receiver, which'll
+        // When the user clicks on the notification enable, run the broadcast receiver, which'll
         // automatically disable the alarm if the user selects as such. If there is no time set,
         // request the time from the user.
         findPreference<Preference>(getString(R.string.preference_notification_enable_key))?.setOnPreferenceClickListener {
@@ -82,7 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
             }
             else {
-                writeCSV(settingsViewModel.alLReflections, "reflections.csv")
+                writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name))
             }
             true
         }
@@ -97,7 +97,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             }
             else {
-                writeCSV(settingsViewModel.allMeditations, "meditations.csv")
+                writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name))
 
             }
             true
@@ -105,6 +105,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     }
 
+    /**
+     * onActivityResult()
+     * We use this to get invalidate the turning on of the notification if no time has been
+     * set in the time picker.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // If the user hasn't setup a time, then we have no indication of when to deliver the
@@ -144,12 +149,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     /**
-     * writeCSV(isReflection: Boolean, isMeditation: Boolean, fileName: String)
-     * Writes the CSV to a file.
+     * writeCSV(exportableRecords: List<Exportable>, fileName: String)
+     * Writes a list of exportable records to a CSV, and attempts to share it.
      */
-    private fun writeCSV(thingToWrite: List<Exportable>, fileName: String) {
+    private fun writeCSV(exportableRecords: List<Exportable>, fileName: String) {
         // Finds the internal path.
-        var path = context?.getExternalFilesDir(null)?.absolutePath as String + "/csv"
+        var path = context?.getExternalFilesDir(null)?.absolutePath as String + getString(R.string.export_folder)
         File(path).mkdirs()
 
         path += "/$fileName"
@@ -157,12 +162,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Writes all the records to file, ensuring that the file has a header.
         var header = true
-        for (record in thingToWrite) {
+        for (record in exportableRecords) {
             if (header) {
-                fileWriter.append(record.headerExport(record))
+                fileWriter.append(record.csvHeader(record))
                 header = false
             }
-            fileWriter.append(record.asCSV(record))
+            fileWriter.append(record.csvBody(record))
         }
 
         // Ensure the file has been properly closed.
@@ -182,19 +187,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
                                             permissions: Array<String>, grantResults: IntArray) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.i("SettingsFragment", "onRequestPermissionsResult: $requestCode")
         when (requestCode) {
             reflectionPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(settingsViewModel.alLReflections, "reflections.csv")
+                    writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name))
                 }
                 return
             }
             meditationPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(settingsViewModel.allMeditations, "meditations.csv")
+                    writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name))
                 }
                 return
             }
