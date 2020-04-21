@@ -61,4 +61,9 @@
     <!-- Share Strings -->
     <string name="share_post_meditation">I\'ve meditated for %s long today! Join me in using Bo Tree.</string>
     <string name="share_csv">Choose an app to save your CSV file to</string>
+
+    <!-- File Export Settings -->
+    <string name="export_meditation_file_name">meditations.csv</string>
+    <string name="export_reflections_file_name">reflections.csv</string>
+    <string name="export_folder">/csv</string>
 </resources>
