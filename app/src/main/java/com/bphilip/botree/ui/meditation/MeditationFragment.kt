@@ -33,57 +33,12 @@ class MeditationFragment : Fragment() {
     private lateinit var mButtonSecondsDown : ImageButton
     private lateinit var sharedPref : SharedPreferences
 
-    val gesture: GestureDetector = GestureDetector(
-        activity,
-        object : GestureDetector.SimpleOnGestureListener() {
-            override fun onDown(e: MotionEvent?): Boolean {
-                return true
-            }
-
-            override fun onFling(
-                e1: MotionEvent, e2: MotionEvent, velocityX: Float,
-                velocityY: Float
-            ): Boolean {
-                val SWIPE_MIN_DISTANCE = 120
-                val SWIPE_MAX_OFF_PATH = 250
-                val SWIPE_THRESHOLD_VELOCITY = 200
-                try {
-                    if (abs(e1.y - e2.y) > SWIPE_MAX_OFF_PATH) return false
-                    if (e1.x - e2.x > SWIPE_MIN_DISTANCE
-                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
-                    ) {
-
-                        incrementWeeksBehind(-1)
-                    } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE
-                        && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
-                    ) {
-                        incrementWeeksBehind(1)
-                    }
-                } catch (e: Exception) {
-                    // nothing
-                }
-                return super.onFling(e1, e2, velocityX, velocityY)
-            }
-        })
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_meditation, container, false)
-        // Couldn't quite get touch right... whenever the RecyclerView has items, the rest of the view
-        // seems to have it's touch sensitivity reduce significantly... this is the best working
-        // compromise.
-        root.setOnTouchListener { v, _ ->
-            v.findViewById<ConstraintLayout>(R.id.bottomConstraintLayout).setOnTouchListener {
-                    v_bcl, event_bcl ->  gesture.onTouchEvent(event_bcl); v_bcl.performClick()
-            }
-            v.findViewById<RecyclerView>(R.id.recyclerview_meditation).setOnTouchListener {
-                    v_rvm, event_rvm ->  gesture.onTouchEvent(event_rvm); v_rvm.performClick()
-            }
-            true
-        }
         return root
     }
 
