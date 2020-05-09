@@ -19,6 +19,8 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textColor="@android:color/black"
             android:textSize="96sp"
+            app:autoSizePresetSizes="@array/autosize_text_sizes_timer"
+            app:autoSizeTextType="uniform"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
