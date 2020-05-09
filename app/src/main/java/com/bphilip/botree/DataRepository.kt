@@ -11,7 +11,7 @@ import org.threeten.bp.ZoneId
  * DataRepository
  * Holds all the data that is used throughout the application.
  * Isn't much use in this application, as we only have one data source (the Room database),
- * but works regardless.
+ * but adds some element of future proofing.
  */
 class DataRepository(private val reflectionDao: ReflectionDao) {
 

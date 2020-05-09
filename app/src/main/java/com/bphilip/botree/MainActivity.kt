@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Initialise the ThreeTen Backport library.
-        // This backports the Java8+ time library to lower version.
+        // This backports the Java8+ time library to lower version (due to our minSDK, our JRE is
+        // out of date)
         // Using this because the time library got significantly improved in Java8.
         AndroidThreeTen.init(this)
 
