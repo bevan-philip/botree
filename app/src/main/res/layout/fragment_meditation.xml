@@ -19,6 +19,7 @@
         android:textSize="88sp"
         android:textStyle="bold"
         app:autoSizeTextType="uniform"
+        app:autoSizePresetSizes="@array/autosize_text_sizes_timer"
         app:layout_constraintBottom_toTopOf="@+id/minutesDown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
