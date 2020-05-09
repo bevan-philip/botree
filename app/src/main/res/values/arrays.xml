@@ -1,6 +1,8 @@
 <resources>
     <array name="autosize_text_sizes_timer">
         <item>72sp</item>
+        <item>84sp</item>
+        <item>86sp</item>
         <item>88sp</item>
     </array>
 </resources>
