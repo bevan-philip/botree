@@ -2,9 +2,11 @@ package com.bphilip.botree
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.AlarmManagerCompat
 import androidx.preference.PreferenceManager
@@ -58,12 +60,32 @@ class MeditationAlarm {
                 pendingIntent
             )
 
+            // Enable the boot receiver, so alarms can persist across reboots.
+            val receiver = ComponentName(context, BootBroadcastReciever::class.java)
+
+            context.packageManager.setComponentEnabledSetting(
+                receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP
+            )
+
+
             Log.i("MeditationAlarm", "Alarm set for " + SimpleDateFormat("HH:mm").format(calendar.time))
         }
         else {
             // Else cancel the alarm.
             Log.i("MeditationAlarm", "Alarm cancelled.")
             alarmManager.cancel(pendingIntent)
+
+            // Disable boot receiver if alarm is not enabled. Don't waste resources :)
+            val receiver = ComponentName(context, BootBroadcastReciever::class.java)
+
+            context.packageManager.setComponentEnabledSetting(
+                receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+            )
+
         }
     }
 }
