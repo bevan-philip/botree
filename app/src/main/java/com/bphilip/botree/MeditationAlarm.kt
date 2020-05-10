@@ -44,6 +44,8 @@ class MeditationAlarm {
             calendar.set(Calendar.HOUR_OF_DAY, sharedPreferences.getInt(context.getString(R.string.saved_notification_hour_key), 9))
             calendar.set(Calendar.MINUTE, sharedPreferences.getInt(context.getString(R.string.saved_notification_minutes_key), 0))
             calendar.set(Calendar.SECOND, 0)
+            // Hopefully makes the next check work reliably.
+            calendar.set(Calendar.MILLISECOND, 0)
 
             // If it is trying to set the alarm to the past, clearly we're a day out.
             if (calendar.timeInMillis < System.currentTimeMillis()) {
@@ -68,7 +70,6 @@ class MeditationAlarm {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP
             )
-
 
             Log.i("MeditationAlarm", "Alarm set for " + SimpleDateFormat("HH:mm").format(calendar.time) + " " + SimpleDateFormat("d/M").format(calendar.time))
         }

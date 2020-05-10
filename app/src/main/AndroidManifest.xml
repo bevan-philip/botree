@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_botree_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:installLocation="internalOnly"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.user_guide.UserGuideView"
             android:label="@string/title_user_guide"
@@ -84,8 +85,18 @@
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
+        <uses-library android:name="android.test.runner"
+            android:required="false" />
+        <uses-library android:name="android.test.base"
+            android:required="false" />
+        <uses-library android:name="android.test.mock"
+            android:required="false" />
+        <uses-library android:name="android.test.core"
+            android:required="false" />
 
     </application>
 
