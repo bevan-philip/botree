@@ -70,7 +70,7 @@ class MeditationAlarm {
             )
 
 
-            Log.i("MeditationAlarm", "Alarm set for " + SimpleDateFormat("HH:mm").format(calendar.time))
+            Log.i("MeditationAlarm", "Alarm set for " + SimpleDateFormat("HH:mm").format(calendar.time) + " " + SimpleDateFormat("d/M").format(calendar.time))
         }
         else {
             // Else cancel the alarm.

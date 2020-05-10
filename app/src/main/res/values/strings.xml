@@ -55,6 +55,7 @@
     <!-- Notification Strings -->
     <string name="meditation_channel_id">meditation_notification</string>
     <string name="meditation_channel_title">Meditation Notification</string>
+    <string name="meditation_channel_description">Daily meditation notification.</string>
     <string name="meditation_notification_title">Meditation Reminder</string>
     <string name="meditation_notification_description">It\'s time to meditate.</string>
 
