@@ -10,8 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.WeekFields
-import java.util.*
 
 class ReflectionsViewModel (application: Application) : AndroidViewModel(application) {
 
@@ -26,8 +24,9 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository.
-        val wordsDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
-        repository = DataRepository(wordsDao)
+        val reflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
+        val meditationDao = ReflectionRoomDatabase.getDatabase(application).meditationDao()
+        repository = DataRepository(reflectionDao, meditationDao)
         allReflections = repository.allReflections
         changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }

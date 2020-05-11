@@ -19,30 +19,13 @@ interface ReflectionDao {
     @Query("SELECT * from reflections_table WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getSortedReflections(start : Long, end : Long): LiveData<List<Reflection>>
 
-    @Query("SELECT * from meditations_table WHERE date BETWEEN :start AND :end ORDER BY id DESC")
-    fun getSortedMeditations(start : Long, end : Long): LiveData<List<Meditation>>
-
-    @Query("SELECT avg(duration) from meditations_table WHERE date BETWEEN :start AND :end")
-    fun getAvgMeditation(start : Long, end : Long): LiveData<Long>
-
-    @Query("SELECT count(duration) from meditations_table WHERE date = :date")
-    fun getCountMeditationsOnDate(date: Long): LiveData<Long>
-
-    @Query("SELECT * from meditations_table")
-    fun getAllMeditations(): List<Meditation>
-
     @Query("SELECT * from reflections_table")
     fun getAllReflections(): List<Reflection>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReflection(reflection: Reflection)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertMeditation(meditation : Meditation)
-
     @Query("DELETE FROM reflections_table")
     suspend fun deleteAllReflections()
 
-    @Query("DELETE FROM meditations_table")
-    suspend fun deleteAllMeditations()
 }

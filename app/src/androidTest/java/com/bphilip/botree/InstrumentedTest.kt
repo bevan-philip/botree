@@ -37,6 +37,7 @@ class InstrumentedTest {
     private val converters: Converters = Converters()
 
     private lateinit var reflectionDao: ReflectionDao
+    private lateinit var meditationDao: MeditationDao
     private lateinit var db: ReflectionRoomDatabase
 
     @Before
@@ -48,6 +49,7 @@ class InstrumentedTest {
             .allowMainThreadQueries()
             .build()
         reflectionDao = db.reflectionDao()
+        meditationDao = db.meditationDao()
         AndroidThreeTen.init(context)
 
     }
@@ -79,9 +81,9 @@ class InstrumentedTest {
     @Throws(Exception::class)
     fun insertMeditationAndTestWritten() {
         val duration: Long = 60000
-        reflectionDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+        meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
 
-        val meditation = reflectionDao.getAllMeditations()[0]
+        val meditation = meditationDao.getAllMeditations()[0]
         assertThat(meditation.duration, equalTo(duration))
     }
 
@@ -89,9 +91,9 @@ class InstrumentedTest {
     @Throws(Exception::class)
     fun checkAverageMeditation() {
         val duration: Long = 60000
-        reflectionDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+        meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
 
-        val average = reflectionDao.getAvgMeditation(
+        val average = meditationDao.getAvgMeditation(
             converters.LocalDateToTimestamp(Utility.startOfWeek()) as Long,
             converters.LocalDateToTimestamp(Utility.endOfWeek()) as Long
         ).waitForValue()
@@ -106,10 +108,10 @@ class InstrumentedTest {
         val duration: Long = 120000
 
         for (i in 1 .. meditations) {
-            reflectionDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+            meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
         }
 
-        val meditationsOnDate = reflectionDao.getCountMeditationsOnDate(
+        val meditationsOnDate = meditationDao.getCountMeditationsOnDate(
             converters.LocalDateToTimestamp(LocalDate.now()) as Long
         ).waitForValue()
 
@@ -123,10 +125,10 @@ class InstrumentedTest {
         val today = LocalDate.now()
 
         for (i in 0 .. meditations) {
-            reflectionDao.insertMeditation(Meditation(0, 60000, today.plusDays(i)))
+            meditationDao.insertMeditation(Meditation(0, 60000, today.plusDays(i)))
         }
 
-        val sortedMeditations = reflectionDao.getSortedMeditations(
+        val sortedMeditations = meditationDao.getSortedMeditations(
             converters.LocalDateToTimestamp(today) as Long,
             converters.LocalDateToTimestamp(today.plusDays(meditations)) as Long
         ).waitForValue()
@@ -148,8 +150,7 @@ class InstrumentedTest {
             converters.LocalDateTimeToTimestamp(today) as Long,
             converters.LocalDateTimeToTimestamp(today.plusDays(reflections)) as Long
         ).waitForValue()
-        
+
         assertThat(sortedReflections[0].date, equalTo(today.plusDays(reflections)))
     }
-
 }

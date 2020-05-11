@@ -30,7 +30,8 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
     init {
         // Gets the reflectionsDao, so the repository talks to the right Dao.
         val reflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
-        repository = DataRepository(reflectionDao)
+        val meditationDao = ReflectionRoomDatabase.getDatabase(application).meditationDao()
+        repository = DataRepository(reflectionDao, meditationDao)
 
         // Looks up all the LiveData values to the LiveData values in the repository.
         allMeditations = repository.allMeditations
