@@ -14,6 +14,7 @@ import org.threeten.bp.*
 abstract class ReflectionRoomDatabase : RoomDatabase() {
 
     abstract fun reflectionDao(): ReflectionDao
+    abstract fun meditationDao(): MeditationDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

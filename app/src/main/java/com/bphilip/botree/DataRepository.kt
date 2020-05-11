@@ -13,7 +13,7 @@ import org.threeten.bp.ZoneId
  * Isn't much use in this application, as we only have one data source (the Room database),
  * but adds some element of future proofing.
  */
-class DataRepository(private val reflectionDao: ReflectionDao) {
+class DataRepository(private val reflectionDao: ReflectionDao, private val meditationDao: MeditationDao) {
 
     // Use the TypeConverters used for the database.
     private val converters: Converters = Converters()
@@ -37,7 +37,7 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
 
     // Gets the average meditation for the duration specified.
     var averageMeditation: LiveData<Long> = Transformations.switchMap(meditationsEndTime) {
-        reflectionDao.getAvgMeditation(
+        meditationDao.getAvgMeditation(
             converters.LocalDateToTimestamp(meditationsStartTime.value) as Long,
             converters.LocalDateToTimestamp(meditationsEndTime.value) as Long
         )
@@ -45,20 +45,20 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
 
     // Gets records of the meditations for the duration specified.
     var allMeditations : LiveData<List<Meditation>> = Transformations.switchMap(meditationsEndTime) {
-        reflectionDao.getSortedMeditations(
+        meditationDao.getSortedMeditations(
             converters.LocalDateToTimestamp(meditationsStartTime.value) as Long,
             converters.LocalDateToTimestamp(meditationsEndTime.value) as Long
         )
     }
 
     // Creates an initial record of meditation on current day.
-    var meditatedOnDay: List<LiveData<Long>> = listOf(reflectionDao.getCountMeditationsOnDate(converters.LocalDateToTimestamp(LocalDate.now()) as Long))
+    var meditatedOnDay: List<LiveData<Long>> = listOf(meditationDao.getCountMeditationsOnDate(converters.LocalDateToTimestamp(LocalDate.now()) as Long))
 
     init {
         // Then fills it such that it'll fit the ticker on the Meditation Fragment.
         for (i in 1..4)
         {
-            meditatedOnDay = meditatedOnDay + reflectionDao.getCountMeditationsOnDate(converters.LocalDateToTimestamp(LocalDate.now().minusDays(i.toLong())) as Long)
+            meditatedOnDay = meditatedOnDay + meditationDao.getCountMeditationsOnDate(converters.LocalDateToTimestamp(LocalDate.now().minusDays(i.toLong())) as Long)
         }
     }
 
@@ -67,7 +67,7 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
     }
 
     fun insertMeditation(meditation: Meditation) {
-        reflectionDao.insertMeditation(meditation)
+        meditationDao.insertMeditation(meditation)
     }
 
     // Requires both variables, because the endTime must be changed for the LiveView to update,
