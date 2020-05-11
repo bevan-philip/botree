@@ -82,7 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 )
             }
             else {
-                writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name))
+                shareCSV(writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name)))
             }
             true
         }
@@ -97,7 +97,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             }
             else {
-                writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name))
+                shareCSV(writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name)))
 
             }
             true
@@ -150,9 +150,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     /**
      * writeCSV(exportableRecords: List<Exportable>, fileName: String)
-     * Writes a list of exportable records to a CSV, and attempts to share it.
+     * Writes a list of exportable records to a CSV.
      */
-    private fun writeCSV(exportableRecords: List<Exportable>, fileName: String) {
+    private fun writeCSV(exportableRecords: List<Exportable>, fileName: String) : String {
         // Finds the internal path.
         var path = context?.getExternalFilesDir(null)?.absolutePath as String + getString(R.string.export_folder)
         File(path).mkdirs()
@@ -175,8 +175,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fileWriter.close()
 
         Log.i("SettingsFragment", "Written CSV.")
-        // Tries to share the CSV.
-        shareCSV(path)
+
+        return path
     }
 
     /**
