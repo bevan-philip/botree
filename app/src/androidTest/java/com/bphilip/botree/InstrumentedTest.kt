@@ -75,7 +75,6 @@ class InstrumentedTest {
         reflectionDao.insertReflection(Reflection(0, "Test value", LocalDateTime.now()))
 
         val byName = reflectionDao.getReflectionById(1)
-        Log.i("instrumentedtest", byName.reflection)
         assertThat(byName.reflection, equalTo("Test value"))
     }
 
