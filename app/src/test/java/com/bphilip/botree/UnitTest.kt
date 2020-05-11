@@ -1,16 +1,13 @@
 package com.bphilip.botree
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
-import com.bphilip.botree.ui.meditation.MeditationViewModel
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.threeten.bp.LocalDate
@@ -26,8 +23,8 @@ import org.threeten.bp.format.DateTimeFormatter
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.N])
-class UtilityTest {
-    lateinit var instrumentationContext: Context
+class UnitTest {
+    lateinit var context: Context
 
     private lateinit var z: ZonedDateTime
     private lateinit var reflection: Reflection
@@ -35,8 +32,8 @@ class UtilityTest {
 
     @Before
     fun setup() {
-        instrumentationContext = ApplicationProvider.getApplicationContext<Context>()
-        AndroidThreeTen.init(instrumentationContext)
+        context = ApplicationProvider.getApplicationContext<Context>()
+        AndroidThreeTen.init(context)
 
         z = ZonedDateTime.of(
             2020, 1, 1,
@@ -51,7 +48,7 @@ class UtilityTest {
     @Test
     fun utility_timeFormatter_ReturnsCorrect() {
         val timeInMillis : Long = 600000
-        val timeInMillisFormatted = Utility.timeFormatter(timeInMillis, instrumentationContext)
+        val timeInMillisFormatted = Utility.timeFormatter(timeInMillis, context)
 
         assertThat(timeInMillisFormatted).isEqualTo("10:00")
     }
