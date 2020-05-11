@@ -27,8 +27,6 @@ object Utility {
             TimeUnit.MILLISECONDS.toMinutes(timeInMillis),
             TimeUnit.MILLISECONDS.toSeconds(timeInMillis) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeInMillis))
-
-
         )
     }
 

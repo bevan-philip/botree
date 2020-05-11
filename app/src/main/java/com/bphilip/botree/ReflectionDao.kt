@@ -29,13 +29,10 @@ interface ReflectionDao {
     fun getCountMeditationsOnDate(date: Long): LiveData<Long>
 
     @Query("SELECT * from meditations_table")
-    suspend fun getAllMeditations(): List<Meditation>
+    fun getAllMeditations(): List<Meditation>
 
     @Query("SELECT * from reflections_table")
-    suspend fun getAllReflections(): List<Reflection>
-
-    @Query("SELECT * from reflections_table WHERE id = :id")
-    fun getReflectionById(id : Int): Reflection
+    fun getAllReflections(): List<Reflection>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReflection(reflection: Reflection)

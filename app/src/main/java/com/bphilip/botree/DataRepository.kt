@@ -62,11 +62,11 @@ class DataRepository(private val reflectionDao: ReflectionDao) {
         }
     }
 
-    suspend fun insertReflection(reflection: Reflection) {
+    fun insertReflection(reflection: Reflection) {
         reflectionDao.insertReflection(reflection)
     }
 
-    suspend fun insertMeditation(meditation: Meditation) {
+    fun insertMeditation(meditation: Meditation) {
         reflectionDao.insertMeditation(meditation)
     }
 
