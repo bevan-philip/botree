@@ -6,6 +6,7 @@ import com.bphilip.botree.Reflection
 import com.bphilip.botree.DataRepository
 import com.bphilip.botree.ReflectionRoomDatabase
 import com.bphilip.botree.Utility
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -32,7 +33,7 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
     }
 
     // Explanation can be found in MeditationViewModel.
-    fun insert(reflection: Reflection) = viewModelScope.launch {
+    fun insert(reflection: Reflection) = viewModelScope.launch (Dispatchers.IO) {
         repository.insertReflection(reflection)
     }
 

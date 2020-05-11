@@ -34,11 +34,14 @@ interface ReflectionDao {
     @Query("SELECT * from reflections_table")
     suspend fun getAllReflections(): List<Reflection>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertReflection(reflection: Reflection)
+    @Query("SELECT * from reflections_table WHERE id = :id")
+    fun getReflectionById(id : Int): Reflection
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertMeditation(meditation : Meditation)
+    fun insertReflection(reflection: Reflection)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMeditation(meditation : Meditation)
 
     @Query("DELETE FROM reflections_table")
     suspend fun deleteAllReflections()
