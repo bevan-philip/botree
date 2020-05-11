@@ -6,6 +6,7 @@ import com.bphilip.botree.DataRepository
 import com.bphilip.botree.Meditation
 import com.bphilip.botree.Utility
 import com.bphilip.botree.ReflectionRoomDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 
@@ -56,7 +57,7 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
      * the viewmodel (i.e. end of viewModel = no more background operations).
      * https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471
      */
-    fun insert(meditation: Meditation) = viewModelScope.launch {
+    fun insert(meditation: Meditation) = viewModelScope.launch(Dispatchers.IO) {
         repository.insertMeditation(meditation)
     }
 
