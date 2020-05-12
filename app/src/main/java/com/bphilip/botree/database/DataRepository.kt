@@ -1,11 +1,10 @@
-package com.bphilip.botree
+package com.bphilip.botree.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
 
 /**
  * DataRepository
@@ -16,7 +15,8 @@ import org.threeten.bp.ZoneId
 class DataRepository(private val reflectionDao: ReflectionDao, private val meditationDao: MeditationDao) {
 
     // Use the TypeConverters used for the database.
-    private val converters: Converters = Converters()
+    private val converters: Converters =
+        Converters()
 
     private val reflectionsStartTime : MutableLiveData<LocalDateTime> = MutableLiveData()
     private val reflectionsEndTime : MutableLiveData<LocalDateTime> = MutableLiveData()

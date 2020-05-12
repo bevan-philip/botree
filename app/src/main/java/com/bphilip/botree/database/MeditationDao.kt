@@ -1,4 +1,4 @@
-package com.bphilip.botree
+package com.bphilip.botree.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

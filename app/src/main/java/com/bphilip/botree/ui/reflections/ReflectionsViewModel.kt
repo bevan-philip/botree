@@ -2,9 +2,9 @@ package com.bphilip.botree.ui.reflections
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.bphilip.botree.Reflection
-import com.bphilip.botree.DataRepository
-import com.bphilip.botree.ReflectionRoomDatabase
+import com.bphilip.botree.database.Reflection
+import com.bphilip.botree.database.DataRepository
+import com.bphilip.botree.database.ReflectionRoomDatabase
 import com.bphilip.botree.Utility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +26,10 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         // the correct WordRepository.
         val reflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
         val meditationDao = ReflectionRoomDatabase.getDatabase(application).meditationDao()
-        repository = DataRepository(reflectionDao, meditationDao)
+        repository = DataRepository(
+            reflectionDao,
+            meditationDao
+        )
         allReflections = repository.allReflections
         changeDates(Utility.startOfWeek(), Utility.endOfWeek())
     }

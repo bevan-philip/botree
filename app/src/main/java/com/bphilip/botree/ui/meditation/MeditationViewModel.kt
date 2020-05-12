@@ -2,10 +2,10 @@ package com.bphilip.botree.ui.meditation
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.bphilip.botree.DataRepository
-import com.bphilip.botree.Meditation
+import com.bphilip.botree.database.DataRepository
+import com.bphilip.botree.database.Meditation
 import com.bphilip.botree.Utility
-import com.bphilip.botree.ReflectionRoomDatabase
+import com.bphilip.botree.database.ReflectionRoomDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
@@ -31,7 +31,10 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         // Gets the reflectionsDao, so the repository talks to the right Dao.
         val reflectionDao = ReflectionRoomDatabase.getDatabase(application).reflectionDao()
         val meditationDao = ReflectionRoomDatabase.getDatabase(application).meditationDao()
-        repository = DataRepository(reflectionDao, meditationDao)
+        repository = DataRepository(
+            reflectionDao,
+            meditationDao
+        )
 
         // Looks up all the LiveData values to the LiveData values in the repository.
         allMeditations = repository.allMeditations

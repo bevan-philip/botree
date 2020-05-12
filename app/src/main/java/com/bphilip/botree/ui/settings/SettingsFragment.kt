@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import com.bphilip.botree.Exportable
+import com.bphilip.botree.database.Exportable
 import com.bphilip.botree.MeditationAlarm
 import com.bphilip.botree.R
 import java.io.File

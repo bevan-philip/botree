@@ -4,11 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import com.bphilip.botree.database.Reflection
 import com.bphilip.botree.ui.reflections.NewReflectionActivity
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.YearMonth
 import org.threeten.bp.temporal.WeekFields
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,7 +43,11 @@ object Utility {
         if (requestCode == ctx.resources.getInteger(R.integer.newWordActivityRequestCode) && resultCode == Activity.RESULT_OK) {
             // Takes the reflection, gets the data and stores it in the database.
             data?.getStringExtra(NewReflectionActivity.EXTRA_REPLY)?.let {
-                val reflection = Reflection(0, it, LocalDateTime.now())
+                val reflection = Reflection(
+                    0,
+                    it,
+                    LocalDateTime.now()
+                )
                 reflectionsViewModel.insert(reflection)
             }
         // Create Toasts depending on outcome.
