@@ -1,8 +1,13 @@
 package com.bphilip.botree.ui.user_guide
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.bphilip.botree.R
 
 /**
@@ -11,16 +16,14 @@ import com.bphilip.botree.R
 
 class UserGuideView : AppCompatActivity() {
 
+    private lateinit var userGuideWebView: WebView
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val myWebView = WebView(applicationContext)
-        // Ensures it has animations consistent with the ones used throughout the app.
-        overridePendingTransition(
-            R.anim.nav_default_pop_enter_anim,
-            R.anim.nav_default_pop_exit_anim
-        )
-        myWebView.loadUrl("file:///android_asset/index.html")
+        // Initialise userGuide with default user guide page.
+        userGuideWebView = WebView(applicationContext)
+        userGuideWebView.loadUrl("file:///android_asset/index.html")
         super.onCreate(savedInstanceState)
-        setContentView(myWebView)
+        setContentView(userGuideWebView)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -28,15 +31,18 @@ class UserGuideView : AppCompatActivity() {
         return true
     }
 
-
     override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(
-            R.anim.nav_default_pop_enter_anim,
-            R.anim.nav_default_pop_exit_anim
-        )
-        finish()
+        // Support going back through pages support.
+        if (userGuideWebView.canGoBack()) {
+            userGuideWebView.goBack()
+        }
+        else {
+            super.onBackPressed()
+            finish()
+        }
     }
+
+
 
 
 }
