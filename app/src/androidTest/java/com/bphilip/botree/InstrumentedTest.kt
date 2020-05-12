@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.bphilip.botree.database.*
 import com.bphilip.botree.ui.meditation.MeditationViewModel
 import com.bphilip.botree.ui.reflections.ReflectionsViewModel
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -35,7 +36,8 @@ class InstrumentedTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     // Use the TypeConverters used for the database.
-    private val converters: Converters = Converters()
+    private val converters: Converters =
+        Converters()
 
     private lateinit var reflectionDao: ReflectionDao
     private lateinit var meditationDao: MeditationDao
@@ -47,7 +49,8 @@ class InstrumentedTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         application = ApplicationProvider.getApplicationContext<Application>()
         db = Room.inMemoryDatabaseBuilder(
-            context, ReflectionRoomDatabase::class.java)
+            context, ReflectionRoomDatabase::class.java
+        )
             // Allowing main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
@@ -74,7 +77,13 @@ class InstrumentedTest {
     @Test
     @Throws(Exception::class)
     fun insertReflectionAndTestWritten() {
-        reflectionDao.insertReflection(Reflection(0, "Test value", LocalDateTime.now()))
+        reflectionDao.insertReflection(
+            Reflection(
+                0,
+                "Test value",
+                LocalDateTime.now()
+            )
+        )
 
         val reflection = reflectionDao.getAllReflections()[0]
         assertThat(reflection.reflection, equalTo("Test value"))
@@ -84,7 +93,13 @@ class InstrumentedTest {
     @Throws(Exception::class)
     fun insertMeditationAndTestWritten() {
         val duration: Long = 60000
-        meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+        meditationDao.insertMeditation(
+            Meditation(
+                0,
+                duration,
+                LocalDate.now()
+            )
+        )
 
         val meditation = meditationDao.getAllMeditations()[0]
         assertThat(meditation.duration, equalTo(duration))
@@ -94,7 +109,13 @@ class InstrumentedTest {
     @Throws(Exception::class)
     fun checkAverageMeditation() {
         val duration: Long = 60000
-        meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+        meditationDao.insertMeditation(
+            Meditation(
+                0,
+                duration,
+                LocalDate.now()
+            )
+        )
 
         val average = meditationDao.getAvgMeditation(
             converters.LocalDateToTimestamp(Utility.startOfWeek()) as Long,
@@ -110,8 +131,14 @@ class InstrumentedTest {
         val meditations: Long = 5
         val duration: Long = 120000
 
-        for (i in 1 .. meditations) {
-            meditationDao.insertMeditation(Meditation(0, duration, LocalDate.now()))
+        for (i in 1..meditations) {
+            meditationDao.insertMeditation(
+                Meditation(
+                    0,
+                    duration,
+                    LocalDate.now()
+                )
+            )
         }
 
         val meditationsOnDate = meditationDao.getCountMeditationsOnDate(
@@ -127,8 +154,14 @@ class InstrumentedTest {
         val meditations: Long = 2
         val today = LocalDate.now()
 
-        for (i in 0 .. meditations) {
-            meditationDao.insertMeditation(Meditation(0, 60000, today.plusDays(i)))
+        for (i in 0..meditations) {
+            meditationDao.insertMeditation(
+                Meditation(
+                    0,
+                    60000,
+                    today.plusDays(i)
+                )
+            )
         }
 
         val sortedMeditations = meditationDao.getSortedMeditations(
@@ -145,8 +178,14 @@ class InstrumentedTest {
         val reflections: Long = 2
         val today = LocalDateTime.now()
 
-        for (i in 0.. reflections) {
-            reflectionDao.insertReflection(Reflection(0, "Reflection", today.plusDays(i)))
+        for (i in 0..reflections) {
+            reflectionDao.insertReflection(
+                Reflection(
+                    0,
+                    "Reflection",
+                    today.plusDays(i)
+                )
+            )
         }
 
         val sortedReflections = reflectionDao.getSortedReflections(

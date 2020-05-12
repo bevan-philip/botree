@@ -3,6 +3,9 @@ package com.bphilip.botree
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.bphilip.botree.database.Converters
+import com.bphilip.botree.database.Meditation
+import com.bphilip.botree.database.Reflection
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Before
@@ -42,9 +45,14 @@ class UnitTest {
             9, 30, 1, 100000000,
             ZoneId.systemDefault()
         )
-        reflection = Reflection(0, "Hello", LocalDateTime.from(z))
+        reflection = Reflection(
+            0,
+            "Hello",
+            LocalDateTime.from(z)
+        )
 
-        meditation = Meditation(0, 600000, LocalDate.from(z))
+        meditation =
+            Meditation(0, 600000, LocalDate.from(z))
 
     }
 

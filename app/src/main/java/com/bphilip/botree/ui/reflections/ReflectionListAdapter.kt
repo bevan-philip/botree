@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bphilip.botree.R
-import com.bphilip.botree.Reflection
+import com.bphilip.botree.database.Reflection
 import org.threeten.bp.format.DateTimeFormatter
 
 class ReflectionListAdapter internal constructor(
