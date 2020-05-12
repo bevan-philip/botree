@@ -33,6 +33,7 @@
     <string name="saved_notification_hour_key">saved_notification_hour</string>
     <string name="saved_notification_minutes_key">saved_notification_minutes</string>
     <string name="time_change_key">time_change</string>
+    <string name="timer_music_check_key">timer_music_check</string>
 
     <!-- Default Preference Strings -->
     <string name="preference_file_key">com.bevan.botree.PREFERENCES</string>
