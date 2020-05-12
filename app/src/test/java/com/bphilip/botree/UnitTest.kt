@@ -30,6 +30,8 @@ class UnitTest {
     private lateinit var reflection: Reflection
     private lateinit var meditation: Meditation
 
+    val converters = Converters()
+
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext<Context>()
@@ -43,6 +45,7 @@ class UnitTest {
         reflection = Reflection(0, "Hello", LocalDateTime.from(z))
 
         meditation = Meditation(0, 600000, LocalDate.from(z))
+
     }
 
     @Test
@@ -95,6 +98,42 @@ class UnitTest {
     fun meditation_exportBody_IsExpected() {
         val body = meditation.csvBody(meditation)
         assertThat(body).isEqualTo("0, 600000, 2020-01-01\n")
+    }
+
+    @Test
+    fun converters_fromDate() {
+        val date = LocalDate.from(z)
+        val fromDate = converters.fromDate(date.toEpochDay()).toString()
+        val dateAsString = date.toString()
+
+        assertThat(fromDate).isEqualTo(dateAsString)
+    }
+
+    @Test
+    fun converters_LocalDateToTimeStamp() {
+        val date = LocalDate.from(z)
+        val converted = converters.LocalDateToTimestamp(date)
+        val expectedTimestamp = date.toEpochDay()
+
+        assertThat(converted).isEqualTo(expectedTimestamp)
+    }
+
+    @Test
+    fun converters_fromTimeStamp() {
+        val time = LocalDateTime.from(z)
+        val timestamp = z.toInstant().toEpochMilli()
+        val fromTimeStamp = converters.fromTimestamp(timestamp)
+
+        assertThat(fromTimeStamp).isEqualTo(time)
+    }
+
+    @Test
+    fun converters_LocalDateTimeToTimeStamp() {
+        val timestamp = z.toInstant().toEpochMilli()
+        val time = LocalDateTime.from(z)
+        val toTimestamp = converters.LocalDateTimeToTimestamp(time)
+
+        assertThat(toTimestamp).isEqualTo(timestamp)
     }
 }
 
