@@ -49,8 +49,9 @@ class PostMeditation : AppCompatActivity() {
         val newReflectionButton : Button = findViewById(R.id.button_add_reflection)
         newReflectionButton.setOnClickListener {
             // Start the new meditation view.
-            val intent = Intent(applicationContext, NewReflectionActivity::class.java)
-            startActivityForResult(intent, newWordActivityRequestCode)
+            Intent(applicationContext, NewReflectionActivity::class.java).also { intent ->
+                startActivityForResult(intent, newWordActivityRequestCode)
+            }
         }
 
     }

@@ -31,8 +31,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private val reflectionPermissionRequestCode = 1
     private val meditationPermissionRequestCode = 2
     private lateinit var settingsViewModel: SettingsViewModel
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         settingsViewModel =
             ViewModelProviders.of(this.activity as FragmentActivity).get(SettingsViewModel::class.java)
 
@@ -138,14 +138,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         )
 
         // Creates the share prompt.
-        val shareIntent: Intent = Intent().apply {
+        Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
             type = "text/csv"
+        }.also {intent ->
+            startActivity(Intent.createChooser(intent, getString(R.string.share_csv)))
         }
 
         // Starts the default Android share prompt.
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_csv)))
     }
 
     /**
@@ -191,14 +192,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
             reflectionPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name))
+                     shareCSV(writeCSV(settingsViewModel.alLReflections, getString(R.string.export_reflections_file_name)))
                 }
                 return
             }
             meditationPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name))
+                    shareCSV(writeCSV(settingsViewModel.allMeditations, getString(R.string.export_meditation_file_name)))
                 }
                 return
             }
