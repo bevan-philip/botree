@@ -126,11 +126,6 @@ class Timer : AppCompatActivity() {
     }
 
     fun finishMeditation(view: View, duration : Long) {
-        // Create the intent that starts the PostMeditation screen.
-        val intent = Intent(this, PostMeditation::class.java).apply {
-            putExtra(EXTRA_TIMER, duration)
-        }
-
         // Store the meditation.
         val meditationViewModel =
             ViewModelProviders.of(this).get(MeditationViewModel::class.java)
@@ -143,20 +138,24 @@ class Timer : AppCompatActivity() {
             )
         )
 
-        // Ensure looping music is stopped
-        Intent(this, MusicService::class.java).also { intent2 ->
-            stopService(intent2)
+        // Ensure looping background music is stopped
+        Intent(this, MusicService::class.java).also { musicIntent ->
+            stopService(musicIntent)
         }
 
-        // Play some audio.
+        // Play a cue when the meditation is over.
         Intent(this, MusicService::class.java).apply {
             putExtra(RESOURCE_NAME, R.raw.bell)
+            // Ensure it'll terminate itself.
             putExtra(IS_LOOP, false)
         }.also { bellIntent -> startService(bellIntent) }
 
-
-        // Start the activity with the intent.
-        startActivity(intent)
+        // Create the intent that starts the PostMeditation screen.
+        Intent(this, PostMeditation::class.java).apply {
+            putExtra(EXTRA_TIMER, duration)
+        }.also {
+            intent -> startActivity(intent)
+        }
         // And ensure completion.
         finish()
     }

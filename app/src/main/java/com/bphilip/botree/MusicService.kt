@@ -16,6 +16,7 @@ class MusicService: Service() {
     private var mMediaPlayer: MediaPlayer? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        // Pulls the resource ID from the intent.
         intent.getIntExtra(RESOURCE_NAME, 0).let {
             mMediaPlayer = MediaPlayer.create(applicationContext, it)
         }
@@ -23,6 +24,8 @@ class MusicService: Service() {
             if (it) {
                 mMediaPlayer?.isLooping = true
             }
+            // Ensure MediaPlayer is fully ended onCompletion. Because we're not looping,
+            // no need to leave it up to parent activity to destroy it.
             else {
                 mMediaPlayer?.setOnCompletionListener {
                     onDestroy()
@@ -41,6 +44,7 @@ class MusicService: Service() {
     }
 
     override fun onDestroy() {
+        // Ensure MediaPlayer is fully ended, and nulled.
         Log.i("MusicService", "Ending MusicService.")
         super.onDestroy()
         mMediaPlayer?.stop()
