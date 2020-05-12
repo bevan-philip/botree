@@ -88,8 +88,9 @@ class ReflectionsFragment : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab?.setOnClickListener {
-            val intent = Intent(activity, NewReflectionActivity::class.java)
-            startActivityForResult(intent, newWordActivityRequestCode)
+            Intent(activity, NewReflectionActivity::class.java).also { intent ->
+                startActivityForResult(intent, newWordActivityRequestCode)
+            }
         }
 
         val textDate: TextView = view.findViewById(R.id.textDate)
