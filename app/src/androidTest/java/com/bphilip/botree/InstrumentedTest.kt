@@ -1,12 +1,14 @@
 package com.bphilip.botree
 
+import android.app.Application
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.bphilip.botree.ui.meditation.MeditationViewModel
+import com.bphilip.botree.ui.reflections.ReflectionsViewModel
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
@@ -16,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.io.IOException
@@ -39,10 +40,12 @@ class InstrumentedTest {
     private lateinit var reflectionDao: ReflectionDao
     private lateinit var meditationDao: MeditationDao
     private lateinit var db: ReflectionRoomDatabase
+    private lateinit var application: Application
 
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
+        application = ApplicationProvider.getApplicationContext<Application>()
         db = Room.inMemoryDatabaseBuilder(
             context, ReflectionRoomDatabase::class.java)
             // Allowing main thread queries, just for testing.
@@ -152,5 +155,77 @@ class InstrumentedTest {
         ).waitForValue()
 
         assertThat(sortedReflections[0].date, equalTo(today.plusDays(reflections)))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun meditationViewModel_incrementWeeksBack_doesntNegative() {
+        val mVM = MeditationViewModel(application)
+        mVM.weeksBehind.value = 0
+        mVM.incrementWeeksBehind(-10)
+
+        val weeksBehind = mVM.weeksBehind.waitForValue()
+
+        assertThat(0, equalTo(weeksBehind))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun meditationViewModel_incrementWeeksBack_goesPositive() {
+        val mVM = MeditationViewModel(application)
+        mVM.weeksBehind.value = 0
+        mVM.incrementWeeksBehind(100)
+
+        val weeksBehind = mVM.weeksBehind.waitForValue()
+
+        assertThat(100, equalTo(weeksBehind))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun meditationViewModel_incrementStartTime_doesntNegative() {
+        val mVM = MeditationViewModel(application)
+        mVM.startTimeInMillis.value = 1000
+        mVM.incrementStartTime(-1001)
+
+        val startTimeInMillis = mVM.startTimeInMillis.waitForValue()
+
+        assertThat(1000, equalTo(startTimeInMillis))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun meditationViewModel_incrementStartTime_increases() {
+        val mVM = MeditationViewModel(application)
+        mVM.startTimeInMillis.value = 1000
+        mVM.incrementStartTime(1000)
+
+        val startTimeInMillis = mVM.startTimeInMillis.waitForValue()
+
+        assertThat(2000, equalTo(startTimeInMillis))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun reflectionsViewModel_incrementWeeksBack_doesntNegative() {
+        val rVM = ReflectionsViewModel(application)
+        rVM.weeksBehind.value = 0
+        rVM.changeTime(-10)
+
+        val weeksBehind = rVM.weeksBehind.waitForValue()
+
+        assertThat(0, equalTo(weeksBehind))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun reflectionsViewModel_incrementWeeksBack_goesPositive() {
+        val rVM = ReflectionsViewModel(application)
+        rVM.weeksBehind.value = 0
+        rVM.changeTime(100)
+
+        val weeksBehind = rVM.weeksBehind.waitForValue()
+
+        assertThat(100, equalTo(weeksBehind))
     }
 }

@@ -62,6 +62,30 @@ class MeditationViewModel (application: Application) : AndroidViewModel(applicat
         repository.insertMeditation(meditation)
     }
 
+    fun incrementStartTime(increment: Long) {
+        // Increment the value with the weird method LiveData Ints seem to require it in.
+        // And ensure that the value can never hit below 0.
+        val currentValue = startTimeInMillis.value as Long
+        if ((currentValue + increment) >= 0) {
+            startTimeInMillis.postValue(
+                startTimeInMillis.value?.plus(
+                    increment
+                )
+            )
+        }
+    }
+    fun incrementWeeksBehind(increment: Long) {
+        // Same as incrementStartTime, but changes the weeksBehind variable.
+        val currentValue = weeksBehind.value as Long
+        if ((currentValue + increment) >= 0) {
+            weeksBehind.postValue(
+                weeksBehind.value?.plus(
+                    increment
+                )
+            )
+        }
+    }
+
 
 
 }
