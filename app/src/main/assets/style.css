@@ -2,6 +2,7 @@ html, body {
     background: #006064;
     color: #ffffff;
     font-family: "Roboto";
+    font-size: 1.125em;
 }
 
 .container img {
@@ -18,13 +19,13 @@ a:hover, a:active {
     color: #FFFFFF;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
     .container {
         width: 70%;
         margin: 0 auto;
     }
 
     .container img {
-        max-width: 40%;
+        max-width: 80%;
     }
 }
