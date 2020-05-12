@@ -1,10 +1,7 @@
-package com.bphilip.botree
+package com.bphilip.botree.database
 
 import android.content.Context
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.threeten.bp.*
 
 // Annotates to create a database with the two classes, Reflection and Meditation.
@@ -25,7 +22,8 @@ abstract class ReflectionRoomDatabase : RoomDatabase() {
         fun getDatabase(
             context: Context
         ): ReflectionRoomDatabase {
-            val tempInstance = INSTANCE
+            val tempInstance =
+                INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }

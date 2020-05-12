@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bphilip.botree.database.Meditation
 import org.threeten.bp.format.DateTimeFormatter
-import kotlin.math.abs
 
 class MeditationListAdapter internal constructor(
     context: Context
