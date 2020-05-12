@@ -91,10 +91,10 @@ class MeditationFragment : Fragment() {
         }
 
         // Changes the timer on button press.
-        mButtonMinutesUp.setOnClickListener { incrementStartTime(resources.getInteger(R.integer.minutes_increment).toLong()) }
-        mButtonMinutesDown.setOnClickListener { incrementStartTime(-resources.getInteger(R.integer.minutes_increment).toLong())  }
-        mButtonSecondsUp.setOnClickListener { incrementStartTime(resources.getInteger(R.integer.seconds_increment).toLong()) }
-        mButtonSecondsDown.setOnClickListener { incrementStartTime(-resources.getInteger(R.integer.seconds_increment).toLong())  }
+        mButtonMinutesUp.setOnClickListener { meditationViewModel.incrementStartTime(resources.getInteger(R.integer.minutes_increment).toLong()) }
+        mButtonMinutesDown.setOnClickListener { meditationViewModel.incrementStartTime(-resources.getInteger(R.integer.minutes_increment).toLong())  }
+        mButtonSecondsUp.setOnClickListener { meditationViewModel.incrementStartTime(resources.getInteger(R.integer.seconds_increment).toLong()) }
+        mButtonSecondsDown.setOnClickListener { meditationViewModel.incrementStartTime(-resources.getInteger(R.integer.seconds_increment).toLong())  }
 
         // Find the recyclerView, and adapter.
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_meditation)
@@ -167,34 +167,12 @@ class MeditationFragment : Fragment() {
         })
         // Change the months.
         val decrementButton: ImageButton = view.findViewById(R.id.button_monthsminusone)
-        decrementButton.setOnClickListener { incrementWeeksBehind(1) }
+        decrementButton.setOnClickListener { meditationViewModel.incrementWeeksBehind(1) }
         val incrementButton: ImageButton = view.findViewById(R.id.button_monthsplusone)
-        incrementButton.setOnClickListener { incrementWeeksBehind(-1) }
+        incrementButton.setOnClickListener { meditationViewModel.incrementWeeksBehind(-1) }
 
     }
 
-    private fun incrementStartTime(increment: Long) {
-        // Increment the value with the weird method LiveData Ints seem to require it in.
-        // And ensure that the value can never hit below 0.
-        val currentValue = meditationViewModel.startTimeInMillis.value as Long
-        if ((currentValue + increment) >= 0) {
-            meditationViewModel.startTimeInMillis.postValue(
-                meditationViewModel.startTimeInMillis.value?.plus(
-                    increment
-                )
-            )
-        }
-    }
-    private fun incrementWeeksBehind(increment: Long) {
-        // Same as incrementStartTime, but changes the weeksBehind variable.
-        val currentValue = meditationViewModel.weeksBehind.value as Long
-        if ((currentValue + increment) >= 0) {
-            meditationViewModel.weeksBehind.postValue(
-                meditationViewModel.weeksBehind.value?.plus(
-                    increment
-                )
-            )
-        }
-    }
+
 
 }

@@ -45,11 +45,11 @@ class ReflectionsFragment : Fragment() {
                         && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
                     ) {
 
-                        changeTime(-1)
+                        reflectionsViewModel.changeTime(-1)
                     } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE
                         && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
                     ) {
-                        changeTime(1)
+                        reflectionsViewModel.changeTime(1)
                     }
                 } catch (e: Exception) {
                     // nothing
@@ -106,10 +106,10 @@ class ReflectionsFragment : Fragment() {
 
         // Change the weeksBehind value.
         val weeksMinusOne = view.findViewById<ImageButton>(R.id.button_monthsminusone)
-        weeksMinusOne.setOnClickListener { changeTime(1) }
+        weeksMinusOne.setOnClickListener { reflectionsViewModel.changeTime(1) }
 
         val weeksPlusOne = view.findViewById<ImageButton>(R.id.button_monthsplusone)
-        weeksPlusOne.setOnClickListener { changeTime(-1) }
+        weeksPlusOne.setOnClickListener { reflectionsViewModel.changeTime(-1) }
 
         recyclerView.setOnTouchListener { v, event ->  gesture.onTouchEvent(event); v.performClick() }
 
@@ -121,20 +121,4 @@ class ReflectionsFragment : Fragment() {
         Utility.createReflectionFromIntent(requestCode, resultCode, data, activity as Context, reflectionsViewModel)
 
     }
-
-    private fun changeTime(increment: Long) {
-        // Increment the value with the weird method LiveData Ints seem to require it in.
-        // And ensure that the value can never hit below 0.
-        val currentValue = reflectionsViewModel.weeksBehind.value as Long
-        if ((currentValue + increment) >= 0) {
-            reflectionsViewModel.weeksBehind.postValue(
-                reflectionsViewModel.weeksBehind.value?.plus(
-                    increment
-                )
-            )
-        }
-    }
-
-
-
 }
