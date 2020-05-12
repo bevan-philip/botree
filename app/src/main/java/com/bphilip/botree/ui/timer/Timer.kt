@@ -1,11 +1,11 @@
 package com.bphilip.botree.ui.timer
 
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,7 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bphilip.botree.EXTRA_TIMER
-import com.bphilip.botree.Meditation
+import com.bphilip.botree.MusicService
+import com.bphilip.botree.MusicService.Companion.IS_LOOP
+import com.bphilip.botree.MusicService.Companion.RESOURCE_NAME
+import com.bphilip.botree.database.Meditation
 import com.bphilip.botree.R
 import com.bphilip.botree.Utility
 import com.bphilip.botree.ui.meditation.MeditationViewModel
@@ -67,6 +70,21 @@ class Timer : AppCompatActivity() {
         // Start the timer.
         startTimer()
 
+        val mCheckBox: CheckBox = findViewById(R.id.music_checkbox)
+
+        mCheckBox.setOnClickListener {
+            if (mCheckBox.isChecked) {
+                Intent(this, MusicService::class.java).apply {
+                    putExtra(RESOURCE_NAME, R.raw.optional_music)
+                    putExtra(IS_LOOP, true)
+                }.also { intent -> startService(intent) }
+            }
+            else {
+                Intent(this, MusicService::class.java).also { intent ->
+                    stopService(intent)
+                }
+            }
+        }
     }
 
     fun startTimer() {
@@ -126,10 +144,17 @@ class Timer : AppCompatActivity() {
             )
         )
 
+        // Ensure looping music is stopped
+        Intent(this, MusicService::class.java).also { intent2 ->
+            stopService(intent2)
+        }
+
         // Play some audio.
-        // Rely on the fact that the audio is relatively small, so will automatically stop.
-        val mp: MediaPlayer? = MediaPlayer.create(view.context, R.raw.bell)
-        mp?.start()
+        Intent(this, MusicService::class.java).apply {
+            putExtra(RESOURCE_NAME, R.raw.bell)
+            putExtra(IS_LOOP, false)
+        }.also { bellIntent -> startService(bellIntent) }
+
 
         // Start the activity with the intent.
         startActivity(intent)
