@@ -41,11 +41,23 @@ class ReflectionsViewModel (application: Application) : AndroidViewModel(applica
         repository.changeTimeReflections(start.atTime(0, 0), end.atTime(23, 59))
     }
 
-    private val _text = MutableLiveData<String>().apply {
+    val text = MutableLiveData<String>().apply {
         // Sets the initial text, just in case.
         value = String.format("%s - %s", Utility.startOfWeek().format(
             DateTimeFormatter.ISO_DATE), Utility.endOfWeek().format(
             DateTimeFormatter.ISO_DATE))
     }
-    val text: MutableLiveData<String> = _text
+
+    fun changeTime(increment: Long) {
+         // Increment the value with the weird method LiveData Ints seem to require it in.
+        // And ensure that the value can never hit below 0.
+        val currentValue = weeksBehind.value as Long
+        if ((currentValue + increment) >= 0) {
+            weeksBehind.postValue(
+                weeksBehind.value?.plus(
+                    increment
+                )
+            )
+        }
+    }
 }
