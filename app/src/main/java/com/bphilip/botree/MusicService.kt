@@ -6,7 +6,7 @@ import android.media.MediaPlayer
 import android.os.IBinder
 import android.util.Log
 
-class MusicService: Service(), MediaPlayer.OnPreparedListener {
+class MusicService: Service() {
 
     companion object {
         const val RESOURCE_NAME = "com.bphilip.botree.MusicService.RESOURCE_NAME"
@@ -36,11 +36,8 @@ class MusicService: Service(), MediaPlayer.OnPreparedListener {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
+        // We don't support binding.
         return null
-    }
-
-    override fun onPrepared(mediaPlayer: MediaPlayer) {
-        mediaPlayer.start()
     }
 
     override fun onDestroy() {

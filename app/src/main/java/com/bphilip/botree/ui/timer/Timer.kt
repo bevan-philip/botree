@@ -24,7 +24,6 @@ import com.bphilip.botree.ui.post_meditation.PostMeditation
 import org.threeten.bp.LocalDate
 import kotlin.math.roundToInt
 
-
 class Timer : AppCompatActivity() {
 
     // CountDownTimer instance.
