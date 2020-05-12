@@ -1,5 +1,6 @@
 package com.bphilip.botree.ui.timer
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -31,6 +32,8 @@ class Timer : AppCompatActivity() {
     // Start/Pause button. Needs to be changeable by different functions.
     private lateinit var mPauseButton : ImageButton
     private lateinit var timerViewModel: TimerViewModel
+
+    private var isMusic = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,27 +69,39 @@ class Timer : AppCompatActivity() {
             timerViewModel.startTimeInMillis.value as Long - timerViewModel.mTimeLeftInMillis.value as Long)
         }
 
-        // Start the timer.
-        startTimer()
-
         val mCheckBox: CheckBox = findViewById(R.id.music_checkbox)
+
+        val sharedPref = this.getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
+        val checked = sharedPref.getBoolean(getString(R.string.timer_music_check_key), false)
+        if (checked) {
+            mCheckBox.isChecked = true
+            isMusic = startMusic(isMusic)
+        }
 
         mCheckBox.setOnClickListener {
             if (mCheckBox.isChecked) {
-                Intent(this, MusicService::class.java).apply {
-                    putExtra(RESOURCE_NAME, R.raw.optional_music)
-                    putExtra(IS_LOOP, true)
-                }.also { intent -> startService(intent) }
+                isMusic = startMusic(isMusic)
+                with (sharedPref.edit()) {
+                    putBoolean(getString(R.string.timer_music_check_key), true)
+                    apply()
+                }
             }
             else {
-                Intent(this, MusicService::class.java).also { intent ->
-                    stopService(intent)
+                isMusic = endMusic(isMusic)
+                with (sharedPref.edit()) {
+                    putBoolean(getString(R.string.timer_music_check_key), false)
+                    apply()
                 }
             }
         }
+
+        // Start the timer.
+        startTimer()
     }
 
-    fun startTimer() {
+    private fun startTimer() {
         // Change the button to indicate what the button will do at that moment in time.
         mPauseButton.setImageResource(R.drawable.ic_pause)
 
@@ -111,6 +126,25 @@ class Timer : AppCompatActivity() {
 
     }
 
+    fun startMusic(isMusic: Boolean): Boolean {
+        if (!isMusic) {
+            Intent(this, MusicService::class.java).apply {
+                putExtra(RESOURCE_NAME, R.raw.optional_music)
+                putExtra(IS_LOOP, true)
+            }.also { intent -> startService(intent) }
+        }
+        return true
+    }
+
+    private fun endMusic(isMusic: Boolean): Boolean {
+        if (isMusic) {
+            Intent(this, MusicService::class.java).also { intent ->
+                stopService(intent)
+            }
+        }
+        return false
+    }
+
     private fun pauseTimer() {
         // Cancel the timer. We can simply restart the timer as we've stored the timeLeft.
         mCountDownTimer.cancel()
@@ -120,6 +154,9 @@ class Timer : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        // Ensure looping background music is stopped
+        endMusic(isMusic)
 
         // Ensure CountDownTimer does not remain active in background.
         mCountDownTimer.cancel()
@@ -138,17 +175,7 @@ class Timer : AppCompatActivity() {
             )
         )
 
-        // Ensure looping background music is stopped
-        Intent(this, MusicService::class.java).also { musicIntent ->
-            stopService(musicIntent)
-        }
-
-        // Play a cue when the meditation is over.
-        Intent(this, MusicService::class.java).apply {
-            putExtra(RESOURCE_NAME, R.raw.bell)
-            // Ensure it'll terminate itself.
-            putExtra(IS_LOOP, false)
-        }.also { bellIntent -> startService(bellIntent) }
+        isMusic = endMusic(isMusic)
 
         // Create the intent that starts the PostMeditation screen.
         Intent(this, PostMeditation::class.java).apply {
@@ -156,7 +183,15 @@ class Timer : AppCompatActivity() {
         }.also {
             intent -> startActivity(intent)
         }
+        // Play a cue when the meditation is over.
+        Intent(this, MusicService::class.java).apply {
+            putExtra(RESOURCE_NAME, R.raw.bell)
+            // Ensure it'll terminate itself.
+            putExtra(IS_LOOP, false)
+        }.also { bellIntent -> startService(bellIntent) }
+
         // And ensure completion.
         finish()
+
     }
 }
