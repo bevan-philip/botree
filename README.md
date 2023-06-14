@@ -15,3 +15,8 @@ An Android meditation app, for a University module. Written in Kotlin.
 - Daily meditation notification
 - Data Export (Reflections and Meditation History)
 - Mobile and tablet support
+
+## Structure
+- app/src/main contains the application code.
+- app/src/test/java/com/bphilip/botree/UnitTest.kt contains unit tests for the Kotlin.
+- app/src/androidTest/java/com/bphilip/botree/InstrumentedTest.kt contains the system tests.
