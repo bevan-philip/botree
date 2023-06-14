@@ -1,6 +1,6 @@
 # Bo Tree
 
-An Android meditation app, for a University module. Written in Kotlin.
+An Android meditation app, made for a University module. Written in Kotlin.
 
 [Download APK](https://github.com/arrivance/botree/releases/download/v0.1-alpha/botree.apk)
 
